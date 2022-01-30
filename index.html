@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Destination Briefing</title>
+    <link rel="stylesheet" href="./assets/css/styles.css">
+</head>
+<body>
+  <header>
+
+    <!-- Placeholder for the country title once it's selected and data is received -->
+    <div id="title_wrapper">
+      <h1 id="title_text"></h1>
+    </div>
+
+    <!-- Drop down list with the available country names -->
+    <div id="search_country">
+      <label for="country_name">Select Country</label>
+      <input list="country_list" name="country" id="country_name">
+      <datalist id="country_list">
+        <!-- Dynamically enters list of countries here -->
+      </datalist>
+    </div>
+    
+  </header>
+  
+  <div>
+    <!-- Map -->
+    <iframe id="map" src="https://maps.google.com/maps?q=N46.85W92.10&t=&z=4&ie=UTF8&iwloc=&output=embed"></iframe>
+  </div>
+  <script src="./assets/js/script.js"></script>
+</body>
+</html>
