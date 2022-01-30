@@ -6,55 +6,75 @@ const countryListEl = document.getElementById("country_list");
 // Handles asynchronous fetch requests and then calls the respective method to handle the data once its received 
 function network_manager(request) {
     
-    let apiUrl = null;
-
     const info_request = request.split("?")[0].trim();
     const parameter = request.split("?")[1];
     
+    let apiUrl = null;
+    let base = null;
+
     // Sets the apiUrl depending on which data is being fetched
     switch(info_request){
         case "latest-rates":
-            // Gets the latest exchange rate data from OpenExchange's API
+            // This address is for the latest exchange rate data from OpenExchange's API
+            // Format latest-rates?USD
 
             // If no base country is passed in it will default to USD
-            const base = !parameter ? "USD" : parameter.trim();
+            base = !parameter ? "USD" : parameter.trim();
 
             apiUrl = "https://openexchangerates.org/api/latest.json?base=" + base + "&app_id=801157a5b7c8404aacf491bfd6a1b2f4";
             break;
+
+        case "rate-history":
+            // This address is for the exchange rate data on a past date from OpenExchange's API
+            // Format rate-history?USD&YYYY-MM-DD
+            
+            base = parameter.split("&")[0].trim();
+            const date = parameter.split("&")[1].trim();
+
+            apiUrl = "https://openexchangerates.org/api/historical/" + date + ".json?" + "base=" + base + "&app_id=801157a5b7c8404aacf491bfd6a1b2f4";
+            break;
+
         case "currencies":
-            // Gets an array of all the available countries and their respective currency codes (e.g. USD) from OpenExchange's API
+            // This address is for an array of all the available countries and their respective currency codes (e.g. USD) from OpenExchange's API
             
             apiUrl = "https://openexchangerates.org/api/currencies.json";
             break;
+
         case "countries":
-            // Gets an array of all the available countries, their full names, country codes amd briefing URL from TravelBriefing's API
+            // This address is for an array of all the available countries, their full names, country codes amd briefing URL from TravelBriefing's API
             
             apiUrl = "https://travelbriefing.org/countries?format=json";
             break;
+
         case "country-briefing":
-            // Gets an object of the breifing data from TravelBriefing's API for the country that was passed in with the request
+            // This address is for an object of the breifing data from TravelBriefing's API for the country that was passed in with the request
             
             apiUrl = parameter + "?format=json";
             break;
+
         default:
+            // Alerts the user if an improper request parameter was passed in and the returns false to terminate the function
+
             alert("Invalid Request!")
             return false;
     }
 
+    // Sends out the fetch request based on the url set above
     fetch(apiUrl).then(function(response){
-        if(response.ok) {
-            response.json()
-            .then(function(data){
+        if(response.ok) { response.json().then(function(data){
                 switch(info_request) {
                     // Executes the repsective method once the data is received
                     case "latest-rates":
                         latest_rates_received(data);
                         break;
+                    case "rate-history":
+                        currency_history_received(data);
+                        break;
                     case "currencies":
                         currencies_received(data);
                         break;
                     case "countries":
-                        countries_received(data)
+                        countries_received(data);
                         break;
                     case "country-briefing":
                         brief_received(data);
@@ -65,6 +85,7 @@ function network_manager(request) {
         }
         else {
             // If the response from the fetch is anything but OK.
+
             alert("A network error has occured!\n\n" + response);
         } 
     });
@@ -74,21 +95,39 @@ function network_manager(request) {
 // Start of received data handlers
 
 function latest_rates_received(rate_data) {
+
+    // Used to excute how the rates should be displayed after they are received
+
     console.log(rate_data);
 }
 
 function currencies_received(currency_data) {
+
+    // Used to handle what to do with the array of countries and their respective currecy codes
+
     console.log(currency_data);
 }
 
+function currency_history_received(history_data) {
+
+    // Used to handle what to do with the history array from the respective countries rate data
+
+    console.log(history_data);
+
+}
+
 function countries_received(country_data) {
-    // When the data is recieved from the network call it saves it in the global variable and saves it to local storage for later use
+   
+    // When the data is recieved from the network call it saves it in the global variable and saves it to local storage for later use, the populates the drop-down
+   
     country_list = country_data;
     window.localStorage.setItem("countries", JSON.stringify(country_data));
     populate_country_list();
 }
 
 function brief_received(brief_data) {
+
+    // Updates the page with the briefing data from the api
 
     console.log("Country Object Received", brief_data);
 
@@ -117,7 +156,7 @@ function brief_received(brief_data) {
 
 function get_countries() {
     // Checks to see if the list of countries is available in local storage. If it is, it puts it into the global variable.
-    // If not, it makes a network call to retrieve the data from the api which will store it in local storgae and put it in the global variable.
+    // If not, it makes a network call to retrieve the data from the api which will store it in local storage and put it in the global variable.
 
     let list = JSON.parse(window.localStorage.getItem("countries"));
 
