@@ -193,7 +193,8 @@ function getBriefingUrl(selection) {
 }
 
 
-// Start of the event listeners
+
+// Eevent listeners that are initiated on page load
 countryNameEl.addEventListener('change', function(event) {
     // Triggers when the user selects a country from the drop-down list
     
