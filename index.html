@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Destination Briefing</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
     <link rel="stylesheet" href="./assets/css/styles.css">
 </head>
 <body>
@@ -12,7 +13,7 @@
 
     <!-- Placeholder for the country title once it's selected and data is received -->
     <div id="title_wrapper">
-      <h1 id="title_text"></h1>
+      <h1 id="title_text" class="title is-1"></h1>
     </div>
 
     <!-- Drop down list with the available country names -->
@@ -23,32 +24,41 @@
         <!-- Dynamically enters list of countries here -->
       </datalist>
     </div>
-    
+
   </header>
   <div>
     <!-- Map -->
     <iframe id="map" src="https://maps.google.com/maps?q=N46.85W92.10&t=&z=4&ie=UTF8&iwloc=&output=embed"></iframe>
   </div>
 
-  <div class="container">
-    <div class="selector-container">
-      <div class="info-container selected" id="advise">Travel Advisories</div>
-      <div class="info-container" id="currency">Currency</div>
-      <div class="info-container" id="electricity">Electricity</div>
-      <div class="info-container" id="language">Language</div>
-      <div class="info-container" id="neighbors">Neighbors</div>
-      <div class="info-container" id="telephone">Telephone</div>
-      <div class="info-container" id ="time-zone">Time Zone</div>
-      <div class="info-container" id="vaccinations">Vaccinations</div>
-      <div class="info-container" id="water">Water</div>
-      <div class="info-container" id="weather">Weather</div>  
-    </div>
-    <div class="data-container">
+  <main class="container">
+    <div class="columns is-fluid is-max-desktop">
 
+      <aside class="menu column is-one-fifth-tablet">
+        <ul class="menu-list">
+          <li id="advise"><a href="" class="is-active" >Travel Advisories</a></li>
+          <li id="currency"><a href="">Currency</a></li>
+          <li id="electricity"><a href="">Electricity</a></li>
+          <li id="language"><a href="">Language</a></li>
+          <li id="neighbors"><a href="">Neighbors</a></li>
+          <li id="telephone"><a href="">Telephone</a></li>
+          <li id ="time-zone"><a href="">Time Zone</a></li>
+          <li id="vaccinations"><a href="">Vaccinations</a></li>
+          <li id="water"><a href="">Water</a></li>
+          <li id="weather"><a href="">Weather</a></li>
+        </ul>
+      </aside>
+
+      <section class="section column">
+        <h1 class="title">Section</h1>
+        <h2 class="subtitle">
+          A simple container to divide your page into <strong>sections</strong>, like the one you're currently reading.
+        </h2>
+      </section>
     </div>
-  </div>
-  
-  
+  </main>
+
+
   <script src="./assets/js/script.js"></script>
 </body>
 </html>
