@@ -14,32 +14,7 @@ function network_manager(request) {
 
     // Sets the apiUrl depending on which data is being fetched
     switch(info_request){
-        case "latest-rates":
-            // This address is for the latest exchange rate data from OpenExchange's API
-            // Format latest-rates?USD
-
-            // If no base country is passed in it will default to USD
-            base = !parameter ? "USD" : parameter.trim();
-
-            apiUrl = "https://openexchangerates.org/api/latest.json?base=" + base + "&app_id=801157a5b7c8404aacf491bfd6a1b2f4";
-            break;
-
-        case "rate-history":
-            // This address is for the exchange rate data on a past date from OpenExchange's API
-            // Format rate-history?USD&YYYY-MM-DD
-            
-            base = parameter.split("&")[0].trim();
-            const date = parameter.split("&")[1].trim();
-
-            apiUrl = "https://openexchangerates.org/api/historical/" + date + ".json?" + "base=" + base + "&app_id=801157a5b7c8404aacf491bfd6a1b2f4";
-            break;
-
-        case "currencies":
-            // This address is for an array of all the available countries and their respective currency codes (e.g. USD) from OpenExchange's API
-            
-            apiUrl = "https://openexchangerates.org/api/currencies.json";
-            break;
-
+      
         case "countries":
             // This address is for an array of all the available countries, their full names, country codes amd briefing URL from TravelBriefing's API
             
@@ -52,6 +27,13 @@ function network_manager(request) {
             apiUrl = parameter + "?format=json";
             break;
 
+        case "weather":
+            // This address is for an object to retrieve the current weather for the lat/long
+            // Example format: https://fcc-weather-api.glitch.me/api/current?lat=25.9&lon=50.6
+
+            apiUrl = "https://fcc-weather-api.glitch.me/api/current?" + parameter;
+            break;
+            
         default:
             // Alerts the user if an improper request parameter was passed in and the returns false to terminate the function
 
@@ -64,21 +46,15 @@ function network_manager(request) {
         if(response.ok) { response.json().then(function(data){
                 switch(info_request) {
                     // Executes the repsective method once the data is received
-                    case "latest-rates":
-                        latest_rates_received(data);
-                        break;
-                    case "rate-history":
-                        currency_history_received(data);
-                        break;
-                    case "currencies":
-                        currencies_received(data);
-                        break;
                     case "countries":
                         countries_received(data);
                         break;
                     case "country-briefing":
                         brief_received(data);
                         break;
+                    case "weather":
+                        weather_received(data);
+                        break
                     default:
                 }
             });
@@ -93,29 +69,6 @@ function network_manager(request) {
 
 
 // Start of received data handlers
-
-function latest_rates_received(rate_data) {
-
-    // Used to excute how the rates should be displayed after they are received
-
-    console.log(rate_data);
-}
-
-function currencies_received(currency_data) {
-
-    // Used to handle what to do with the array of countries and their respective currecy codes
-
-    console.log(currency_data);
-}
-
-function currency_history_received(history_data) {
-
-    // Used to handle what to do with the history array from the respective countries rate data
-
-    console.log(history_data);
-
-}
-
 function countries_received(country_data) {
    
     // When the data is recieved from the network call it saves it in the global variable and saves it to local storage for later use, the populates the drop-down
@@ -149,8 +102,14 @@ function brief_received(brief_data) {
     // Changes the map's source URL to show the respective country
     mapEl.src = "https://maps.google.com/maps?q="+ map_lat + map_lng + "&t=&z=" + zoom + "&ie=UTF8&iwloc=&output=embed";
 
+    // Takes the lat/long from the country brief received to get the the current weather information
+    network_manager("weather?lat=" + lat + "&lon=" + lng)
+
 }
 
+function weather_received(weather_data) {
+    console.log("Current", weather_data);
+}
 
 // Misc functions
 
@@ -192,8 +151,6 @@ function getBriefingUrl(selection) {
     return inList;
 }
 
-
-
 // Eevent listeners that are initiated on page load
 countryNameEl.addEventListener('change', function(event) {
     // Triggers when the user selects a country from the drop-down list
@@ -211,6 +168,8 @@ countryNameEl.addEventListener('change', function(event) {
     }
 });
    
-
 // Loads the countries into the drop down on page load
 get_countries();
+
+
+network_manager("weather?lat=25.9&lon=50.6")
