@@ -5,50 +5,69 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Destination Briefing</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
     <link rel="stylesheet" href="./assets/css/styles.css">
 </head>
 <body>
-  <header>
 
-    <!-- Placeholder for the country title once it's selected and data is received -->
-    <div id="title_wrapper">
-      <h1 id="title_text"></h1>
+  <header class="section is-fluid is-max-desktop level header-bg">
+    <div class="level-left">
+      <div class="level-item">
+        <h1 id="title_wrapper" class="title title_wrapper is-3">Navigation Station</h1>
+      </div>
     </div>
 
-    <!-- Drop down list with the available country names -->
-    <div id="search_country">
-      <label for="country_name">Select Country</label>
-      <input list="country_list" name="country" id="country_name">
-      <datalist id="country_list">
-        <!-- Dynamically enters list of countries here -->
-      </datalist>
+    <div class="level-right">
+      <div class="level-item" id="search_country">
+        <!-- Drop down list with the available country names -->
+        <label for="country_name">Select Country</label>
+        <input list="country_list" name="country" id="country_name">
+        <datalist id="country_list">
+          <!-- Dynamically enters list of countries here -->
+        </datalist>
+      </div>
     </div>
-    
+
   </header>
+
   <div>
     <!-- Map -->
     <iframe id="map" src="https://maps.google.com/maps?q=N46.85W92.10&t=&z=4&ie=UTF8&iwloc=&output=embed"></iframe>
   </div>
 
-  <div class="container">
-    <div class="selector-container">
-      <div class="info-container selected" id="advise">Travel Advisories</div>
-      <div class="info-container" id="currency">Currency</div>
-      <div class="info-container" id="electricity">Electricity</div>
-      <div class="info-container" id="language">Language</div>
-      <div class="info-container" id="neighbors">Neighbors</div>
-      <div class="info-container" id="telephone">Telephone</div>
-      <div class="info-container" id ="time-zone">Time Zone</div>
-      <div class="info-container" id="vaccinations">Vaccinations</div>
-      <div class="info-container" id="water">Water</div>
-      <div class="info-container" id="weather">Weather</div>  
-    </div>
-    <div class="data-container">
+  <main class="container">
 
+
+    <!-- Placeholder for the country title once it's selected and data is received -->
+    <div class="has-text-centered">
+      <h1 id="title_text" class="title is-1"></h1>
     </div>
-  </div>
-  
-  
+
+    <aside class="tabs is-centered">
+      <ul>
+        <li id="conditions"><a href="">Current Conditions</a></li>
+        <li id="language"><a href="">Language</a></li>
+        <li id="currency" class="is-active"><a href="">Currency</a></li>
+        <li id="advise"><a href="" >Travel Advisories</a></li>
+        <li id="electricity"><a href="">Electricity</a></li>
+      </ul>
+    </aside>
+
+    <section class="section">
+      <h1 class="title">Section</h1>
+      <h2 class="subtitle">
+        A simple container to divide your page into <strong>sections</strong>, like the one you're currently reading.
+      </h2>
+      <div class="time_container">
+        <div class="country_date"></div>
+        <div class="country_time"></div>
+        <div class="time_diff"></div>  
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data-10-year-range.js"></script>
   <script src="./assets/js/script.js"></script>
 </body>
 </html>
