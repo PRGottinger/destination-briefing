@@ -53,17 +53,42 @@
       </ul>
     </aside>
 
-    <section class="section">
-      <h1 class="title">Section</h1>
-      <h2 class="subtitle">
-        A simple container to divide your page into <strong>sections</strong>, like the one you're currently reading.
-      </h2>
-      <div class="time_container">
-        <div class="country_date"></div>
-        <div class="country_time"></div>
-        <div class="time_diff"></div>  
+    <!-- Current Conditions section -->
+    <h1 class="title">Section</h1>
+    <section class="section columns">
+
+      <!-- Time card -->
+      <div id="time" class="card column">
+        <div class="time_container">
+          <div class="country_date"></div>
+          <div class="country_time"></div>
+          <div class="time_diff"></div>
+        </div>
       </div>
+
+      <!-- Current weather card -->
+      <div id="weather-current" class="card column">
+
+      </div>
+
+      <!-- Historical weather card -->
+      <div id="weather-historical" class="card column">
+
+      </div>
+
     </section>
+
+    <!-- Other/Travel Information section -->
+    <h1 class="misc-info">Section</h1>
+    <section class="section columns">
+
+      <!-- Plug / Electricity card-->
+      <div id="connectivity" class="card column">
+
+      </div>
+
+    </section>
+
   </main>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
