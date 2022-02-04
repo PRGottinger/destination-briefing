@@ -1,6 +1,12 @@
 let country_list = [];
+let world_time = null;
+
+
 const countryNameEl = document.getElementById("country_name");
 const countryListEl = document.getElementById("country_list");
+const country_timeEl = document.querySelector(".country_time");
+const country_dateEl = document.querySelector(".country_date");
+const time_diffEl = document.querySelector(".time_diff");
 
 
 // Handles asynchronous fetch requests and then calls the respective method to handle the data once its received 
@@ -105,6 +111,8 @@ function brief_received(brief_data) {
     // Takes the lat/long from the country brief received to get the the current weather information
     network_manager("weather?lat=" + lat + "&lon=" + lng)
 
+    worldTime(brief_data.timezone.name);
+
 }
 
 function weather_received(weather_data) {
@@ -151,6 +159,18 @@ function getBriefingUrl(selection) {
     return inList;
 }
 
+function worldTime(timezone) {
+    world_time = setInterval(function(){
+        const time = moment().tz(timezone).format("HH:mm:ss");
+        const day = moment().tz(timezone).format("dddd D MMMM YYYY");
+        const time_diff = moment.tz.zone(moment.tz.guess()).utcOffset(Date.now())/60 - moment.tz.zone(timezone).utcOffset(Date.now())/60;
+        if(country_timeEl) { country_timeEl.innerHTML = "<p>" + time + "</p>"; }
+        if(country_dateEl) { country_dateEl.innerHTML = "<p>" + day + "</p>"; }
+        if(time_diffEl) { time_diffEl.innerHTML = "<p>" + Math.abs(time_diff) + "</p>" };
+        
+    }, 1000)
+}
+
 // Eevent listeners that are initiated on page load
 countryNameEl.addEventListener('change', function(event) {
     // Triggers when the user selects a country from the drop-down list
@@ -160,6 +180,7 @@ countryNameEl.addEventListener('change', function(event) {
 
     // Makes sure there is a url and sends the request to the network manager
     if(brief_url) { 
+        clearInterval(world_time);
         network_manager("country-briefing?" + brief_url);
         countryNameEl.value = "";
     } else {
@@ -170,6 +191,3 @@ countryNameEl.addEventListener('change', function(event) {
    
 // Loads the countries into the drop down on page load
 get_countries();
-
-
-network_manager("weather?lat=25.9&lon=50.6")

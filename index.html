@@ -9,21 +9,25 @@
 </head>
 <body>
   <header>
-
     <!-- Placeholder for the country title once it's selected and data is received -->
-    <div id="title_wrapper">
-      <h1 id="title_text"></h1>
-    </div>
+      <div id="title_wrapper">
+        <h1 id="title_text"></h1>
+      </div>
 
-    <!-- Drop down list with the available country names -->
-    <div id="search_country">
-      <label for="country_name">Select Country</label>
-      <input list="country_list" name="country" id="country_name">
-      <datalist id="country_list">
-        <!-- Dynamically enters list of countries here -->
-      </datalist>
-    </div>
-    
+      <div class="time_container">
+        <div class="country_date"></div>
+        <div class="country_time"></div>
+        <div class="time_diff"></div>  
+      </div>
+
+      <!-- Drop down list with the available country names -->
+      <div id="search_country">
+        <label for="country_name">Select Country</label>
+        <input list="country_list" name="country" id="country_name">
+        <datalist id="country_list">
+          <!-- Dynamically enters list of countries here -->
+        </datalist>
+      </div>
   </header>
   <div>
     <!-- Map -->
@@ -47,8 +51,8 @@
 
     </div>
   </div>
-  
-  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data-10-year-range.js"></script>
   <script src="./assets/js/script.js"></script>
 </body>
 </html>
