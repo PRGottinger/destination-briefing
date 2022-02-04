@@ -9,53 +9,56 @@
     <link rel="stylesheet" href="./assets/css/styles.css">
 </head>
 <body>
-  <header>
 
-    <!-- Placeholder for the country title once it's selected and data is received -->
-    <div id="title_wrapper">
-      <h1 id="title_text" class="title is-1"></h1>
+  <header class="section is-fluid is-max-desktop level header-bg">
+    <div class="level-left">
+      <div class="level-item">
+        <h1 id="title_wrapper" class="title title_wrapper is-3">Navigation Station</h1>
+      </div>
     </div>
 
-    <!-- Drop down list with the available country names -->
-    <div id="search_country">
-      <label for="country_name">Select Country</label>
-      <input list="country_list" name="country" id="country_name">
-      <datalist id="country_list">
-        <!-- Dynamically enters list of countries here -->
-      </datalist>
+    <div class="level-right">
+      <div class="level-item" id="search_country">
+        <!-- Drop down list with the available country names -->
+        <label for="country_name">Select Country</label>
+        <input list="country_list" name="country" id="country_name">
+        <datalist id="country_list">
+          <!-- Dynamically enters list of countries here -->
+        </datalist>
+      </div>
     </div>
 
   </header>
+
   <div>
     <!-- Map -->
     <iframe id="map" src="https://maps.google.com/maps?q=N46.85W92.10&t=&z=4&ie=UTF8&iwloc=&output=embed"></iframe>
   </div>
 
   <main class="container">
-    <div class="columns is-fluid is-max-desktop">
 
-      <aside class="menu column is-one-fifth-tablet">
-        <ul class="menu-list">
-          <li id="advise"><a href="" class="is-active" >Travel Advisories</a></li>
-          <li id="currency"><a href="">Currency</a></li>
-          <li id="electricity"><a href="">Electricity</a></li>
-          <li id="language"><a href="">Language</a></li>
-          <li id="neighbors"><a href="">Neighbors</a></li>
-          <li id="telephone"><a href="">Telephone</a></li>
-          <li id ="time-zone"><a href="">Time Zone</a></li>
-          <li id="vaccinations"><a href="">Vaccinations</a></li>
-          <li id="water"><a href="">Water</a></li>
-          <li id="weather"><a href="">Weather</a></li>
-        </ul>
-      </aside>
 
-      <section class="section column">
-        <h1 class="title">Section</h1>
-        <h2 class="subtitle">
-          A simple container to divide your page into <strong>sections</strong>, like the one you're currently reading.
-        </h2>
-      </section>
+    <!-- Placeholder for the country title once it's selected and data is received -->
+    <div class="has-text-centered">
+      <h1 id="title_text" class="title is-1"></h1>
     </div>
+
+    <aside class="tabs is-centered">
+      <ul>
+        <li id="conditions"><a href="">Current Conditions</a></li>
+        <li id="language"><a href="">Language</a></li>
+        <li id="currency" class="is-active"><a href="">Currency</a></li>
+        <li id="advise"><a href="" >Travel Advisories</a></li>
+        <li id="electricity"><a href="">Electricity</a></li>
+      </ul>
+    </aside>
+
+    <section class="section">
+      <h1 class="title">Section</h1>
+      <h2 class="subtitle">
+        A simple container to divide your page into <strong>sections</strong>, like the one you're currently reading.
+      </h2>
+    </section>
   </main>
 
 
