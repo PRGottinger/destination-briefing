@@ -18,6 +18,14 @@
 /* For the title text inside the header */
 #title_wrapper {
     margin-left: 25px;
+    flex: 1;
+}
+
+.time_container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 header div h1 {
@@ -30,7 +38,7 @@ header {
 
 /* Start of the input form inside the header */
 #search_country {
-    width: 350px;
+    flex: 1;
     display: flex;
     justify-content: space-between;
     align-items: center;
