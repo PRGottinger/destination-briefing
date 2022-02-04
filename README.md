@@ -15,7 +15,7 @@ Since the country names are stored in Local Storage it lists out all possible co
 
 ## Project Requirements:
 - Intergrating Information from Multiple Server-side APIs:  
-    We used FCC Weather API and Travel Briefing API
+    We used FCC Weather API and Travel Briefing API.
 
 - Alternate CSS Framwork other than Bootstrap:   
     We intergrated Bulma Framework into the UI.
