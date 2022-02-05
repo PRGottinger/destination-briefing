@@ -40,7 +40,7 @@
 
   <main class="container">
 
-
+    
     <!-- Placeholder for the country title once it's selected and data is received -->
     <div class="has-text-centered">
       <h1 id="title_text" class="title is-1"></h1>
@@ -62,55 +62,29 @@
 
       <!-- Time card -->
       <div id="time" class="card column">
-        <header class="card-header">
-          <p class="card-header-title">
-            Local Time
-          </p>
-        </header>
-        <div class="card-content">
-          <div class="time_container content">
-            <div class="country_time"></div>
-            <div class="country_date"></div>
-          </div>
+        <div class="time_container">
+          <div class="country_time"></div>
+          <div class="country_date"></div>
         </div>
       </div>
 
       <!-- Current weather card -->
 
       <div id="weather-current" class="card column">
-        <header class="card-header">
-          <p class="card-header-title">
-            Current Weather
-          </p>
-        </header>
-        <div class="card-content">
-          <div class="content">
-            <div class="currents">
-              <!-- <img src="./assets/images/wx-icons/clear-day.svg" alt="">      -->
-              <div class="wx_icon"></div>
-              <div class="current_temp"></div>
-            </div>
-            <div class="currents_wrapper">
-              <!-- Additional current elements dynamically entered here -->
-            </div>
-          </div>
+        <div class="currents">  
+          <!-- <img src="./assets/images/wx-icons/clear-day.svg" alt="">      -->
+          <div class="wx_icon"></div>
+          <div class="current_temp"></div>
+        </div>
+        <div class="currents_wrapper">
+          <!-- Additional current elements dynamically entered here -->
         </div>
       </div>
 
       <!-- Historical weather card -->
       <div id="weather-historical" class="card column">
-        <header class="card-header">
-          <p class="card-header-title">
-            Historical Weather
-          </p>
-        </header>
-        <div class="card-content">
-          <div class="average_temps_wrapper content">
-            <!-- Avg temps dynamically entered here -->
-          </div>
-          <span class="badge is-hot rounded-pill">Hot</span>
-          <span class="badge is-nice rounded-pill">Nice</span>
-          <span class="badge is-cold rounded-pill">Cold</span>
+        <div class="average_temps_wrapper">
+          <!-- Avg temps dynamically entered here -->
         </div>
       </div>
 
