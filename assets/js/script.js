@@ -127,14 +127,12 @@ function weather_received(weather_data) {
     // Creates DOM elements to put the weather data into
     const wx_iconEl = document.querySelector(".wx_icon");
     const current_tempEl = document.querySelector(".current_temp");
-    const station_nameEl = document.querySelector(".station_name");
-
+  
     const wx_icon = get_wx_icon(weather_data.weather[0].id);
 
     // Puts the icon & temp into the DOM
     wx_iconEl.innerHTML = "<img src=" + wx_icon + ">";
     current_tempEl.innerHTML = format_temp(weather_data.main.temp);
-    station_nameEl.innerHTML =  weather_data.name;
     
     // Gets the HTML wrapper for the other current tags
     const currents_wrapperEl = document.querySelector(".currents_wrapper");
@@ -162,7 +160,7 @@ function weather_received(weather_data) {
                 break;
             case 1:
                 tag_label.textContent = "Baro";
-                tag_value.textContent = Math.round(weather_data.main.pressure) + " mb (" + Math.round(weather_data.main.pressure * 0.0295 * 100)/100 + " in.)";
+                tag_value.textContent = Math.round(weather_data.main.pressure) + " mb (" + (Math.round(weather_data.main.pressure * 0.0295 * 100)/100).toFixed(2) + " in.)";
                 break;
              case 2:
                tag_label.textContent = "Humidity";
