@@ -164,7 +164,7 @@ header {
 
 /* Used to change the font size of am/pm */
 .subscript {
-    font-size: smaller;
+    font-size: 26px;
 }
 
 .is-hot {

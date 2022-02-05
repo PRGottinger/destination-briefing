@@ -222,22 +222,18 @@ function set_brief_url(selection) {
     return inList;
 }
 function set_world_time(timezone) {
-        
-    const country_dateEl = document.querySelector(".country_date");
-    const country_timeEl = document.querySelector(".country_time");
 
-
+       
     // Gets the current date/time in the selected country's timezone
     const hour = moment().tz(timezone).format("H");
     isDayTime = hour < 18 && hour > 6 ? true : false;
-
-    const time = moment().tz(timezone).format("h:mm");
-    const part = moment().tz(timezone).format("a");
-    const day = moment().tz(timezone).format("dddd, MMMM D, YYYY");
+   
+    const country_dateEl = document.querySelector(".country_date");
+    const country_timeEl = document.querySelector(".country_time");
 
     // Calculates the difference between user's timezone and selected country's
     const delta = moment.tz.zone(moment.tz.guess()).utcOffset(Date.now())/60 - moment.tz.zone(timezone).utcOffset(Date.now())/60;
-    
+
     // Generates the string that tells the user what the difference in time is for the user
     let units = " hours ";
     let time_diff = null;
@@ -246,12 +242,17 @@ function set_world_time(timezone) {
         if (Math.abs(delta) === 1) { units = " hour " };
         time_diff = delta < 0 ?  delta + units : "+" + delta + units;
     }
+ 
+    world_time = setInterval(function() {
 
-    // Inserts the selected country's formatted date and time into the DOM
-    if(country_timeEl) { country_timeEl.innerHTML = "<p>" + time + "<span class='subscript'>" + part +  "</span><span class='time_diff'> (" + time_diff + ")</span></p>"; }
-    if(country_dateEl) { country_dateEl.innerHTML = "<p>" + day + "</p>"; }
-    
+        const time = moment().tz(timezone).format("h:mm");
+        const part = moment().tz(timezone).format("A");
+        const day = moment().tz(timezone).format("dddd, MMMM D, YYYY");
 
+        // Inserts the selected country's formatted date and time into the DOM
+        if(country_timeEl) { country_timeEl.innerHTML = "<p>" + time + "<span class='subscript'>" + part +  "</span><span class='time_diff'> (" + time_diff + ")</span></p>"; }
+        if(country_dateEl) { country_dateEl.innerHTML = "<p>" + day + "</p>"; }
+    },  1000)
 }
 function format_temp(celsius) {
     const cel_format = Math.round(celsius) + "\u2103";
@@ -337,7 +338,6 @@ function format_wind(degrees, speed) {
 }
 function get_wx_icon(code) {
     let wx_icon = null;
-    console.log(code);
     switch(true) {
         case (code < 300): // Thunderstorm
             wx_icon = "./assets/images/wx-icons/thunderstorms-day.svg"
