@@ -121,6 +121,7 @@ header {
 
 .currents_wrapper {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
 
 }
@@ -130,8 +131,6 @@ header {
     flex-wrap: wrap;
     justify-content: space-between;
 }
-
-
 
 .tagbox {
     display: flex;
@@ -156,6 +155,11 @@ header {
 
 .tagbox_value {
     font-size: 12px;
+}
+
+.wx_icon {
+    width: 128px;
+    height: 128px;
 }
 
 /* Used to change the font size of am/pm */

@@ -2,6 +2,7 @@ let country_list = [];
 let world_time = null;
 let current_weather_request = null;
 let weather_attempts = 0;
+let isDayTime = null;
 
 const countryNameEl = document.getElementById("country_name");
 const countryListEl = document.getElementById("country_list");
@@ -33,7 +34,6 @@ function network_manager(request) {
         case "weather":
             // This address is for an object to retrieve the current weather for the lat/long
             // Example format: https://fcc-weather-api.glitch.me/api/current?lat=25.9&lon=50.6
-            console.log(parameter);
             apiUrl = "https://fcc-weather-api.glitch.me/api/current?" + parameter;
             break;
             
@@ -82,9 +82,6 @@ function brief_received(brief_data) {
     // Updates the page with the briefing data from the api
 
     set_world_time(brief_data.timezone.name);
-
-    console.log("Country Object Received", brief_data);
-
     const mapEl = document.getElementById("map");
     const title = document.getElementById("title_text");
 
@@ -132,9 +129,8 @@ function weather_received(weather_data) {
     const current_tempEl = document.querySelector(".current_temp");
     const station_nameEl = document.querySelector(".station_name");
 
-    // If the weather icon is null, then it uses a no-data image instead
-    const wx_icon = !weather_data.weather[0].icon ? "./assets/images/no-data-7729.svg" : weather_data.weather[0].icon;
-    
+    const wx_icon = get_wx_icon(weather_data.weather[0].id);
+
     // Puts the icon & temp into the DOM
     wx_iconEl.innerHTML = "<img src=" + wx_icon + ">";
     current_tempEl.innerHTML = format_temp(weather_data.main.temp);
@@ -150,7 +146,6 @@ function weather_received(weather_data) {
     
     // Creates the other current tagboxes along with their respecitve elements and inserts the data
     for(i = 0; i < 3; i++) {
-        console.log(i);
         const current_tag = document.createElement("div");
         current_tag.classList.add("current_tagbox", "tagbox");
 
@@ -233,6 +228,9 @@ function set_world_time(timezone) {
 
 
     // Gets the current date/time in the selected country's timezone
+    const hour = moment().tz(timezone).format("H");
+    isDayTime = hour < 18 && hour > 6 ? true : false;
+
     const time = moment().tz(timezone).format("h:mm");
     const part = moment().tz(timezone).format("a");
     const day = moment().tz(timezone).format("dddd, MMMM D, YYYY");
@@ -280,7 +278,7 @@ function set_avg_temps(temp_data) {
 
         // Determines if the average temp is hot/cold/nice and creates the appropriate class to be added to the tagbox
         let extreme_class = null;
-        if (temp_data.weather[months[i]].tAvg > 25) {
+        if (Math.round(temp_data.weather[months[i]].tAvg) > 25) {
             extreme_class = "is-hot";
         } else if (temp_data.weather[months[i]].tAvg < 10) {
             extreme_class = "is-cold"
@@ -337,8 +335,45 @@ function format_wind(degrees, speed) {
 
     return direction + " " + mph + "mph"; 
 }
-function set_curents(weather_data) {
+function get_wx_icon(code) {
+    let wx_icon = null;
+    console.log(code);
+    switch(true) {
+        case (code < 300): // Thunderstorm
+            wx_icon = "./assets/images/wx-icons/thunderstorms-day.svg"
+            break;
+        case (code < 500): // Drizzle
+            wx_icon = "./assets/images/wx-icons/partly-cloudy-day-drizzle.svg"
+            break;
+        case (code < 600): // Rain
+            wx_icon = "./assets/images/wx-icons/partly-cloudy-day-rain.svg"
+            break;
+        case (code < 800): // Snow
+            wx_icon = "./assets/images/wx-icons/partly-cloudy-day-snow.svg"
+            break;
+        case (code === 800): // Clear
+            wx_icon = "./assets/images/wx-icons/clear-day.svg"        
+            break;
+        
+        case (code === 801): // Few
+        case (code === 802): // Scattered
+        case (code === 803): // Broken
+            wx_icon = "./assets/images/wx-icons/partly-cloudy-day.svg"
+            break;
 
+        case (code < 900): // Overcast
+            wx_icon = "./assets/images/wx-icons/overcast-day.svg"
+            break;
+    }
+
+    if(!wx_icon) {
+        return "./assets/images/wx-icons/code-red.svg";
+    } else if (!isDayTime) {
+        return wx_icon.replace("day", "night")
+    } else {
+        return wx_icon;
+    }
+    
 }
 
 // Event listeners that are initiated on page load
