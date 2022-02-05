@@ -1,8 +1,9 @@
-/* {
-    padding: 0;
+* {
+    /* padding: 0;
     margin: 0;
-    box-sizing: border-box;
-} */
+    box-sizing: border-box; */
+    /* font-family:'Roboto','Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif */
+}
 
 /* Start of Header */
 .header-bg {
@@ -13,6 +14,7 @@
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center; */
+
 }
 
 /* For the title text inside the header */
@@ -25,7 +27,7 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
 }
 
 header div h1 {
@@ -56,4 +58,119 @@ header {
 #map {
     width: 100%;
     height:400px;
+}
+
+
+/* Start of current conditions data */
+
+.country_date {
+    font-family: 'Roboto';
+    font-weight: bold;
+    font-style: oblique;
+}
+
+.time_diff {
+    font-size: 22px;
+}
+
+.currents {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.current_temp {
+    font-family: 'Roboto';
+    font-style: oblique;
+    font-size: 35px;
+    margin-left: 10px;
+
+}
+
+#currents_table {
+    margin: 0 auto;
+    margin-top: 20px;
+    text-align: center;
+    font-size: 10px;
+    font-family: 'Roboto';
+}
+
+#currents_table th {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+#currents_table td {
+    border: black 1px solid;
+    font-size: 18px;
+    font-weight: 400;
+    padding: 4px;
+}
+
+.country_time {
+    font-family: 'Roboto';
+    font-style: oblique;
+    font-size: 45px;
+}
+
+.station_name {
+    margin-top: 10px;
+    font-size: x-small;
+    font-weight: bold;
+}
+
+.currents_wrapper {
+    display: flex;
+    justify-content: center;
+
+}
+
+.average_temps_wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+
+
+.tagbox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: black 1px solid;
+    padding: 5px;
+    padding-top: 0px;
+    border-radius: 10px;
+    min-width: 95px;
+    margin: 5px;
+    background: rgb(243, 240, 240);
+
+}
+
+.tagbox_label {
+    font-size: 12px;
+    font-weight: bold;
+    font-style: oblique;
+}
+
+.tagbox_value {
+    font-size: 12px;
+}
+
+/* Used to change the font size of am/pm */
+.subscript {
+    font-size: smaller;
+}
+
+.is-hot {
+    background: tomato;
+}
+
+.is-cold {
+    background: skyblue;
+}
+
+.is-nice {
+    background: springgreen;
 }
