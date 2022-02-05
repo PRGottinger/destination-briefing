@@ -79,6 +79,8 @@ function countries_received(country_data) {
 }
 function brief_received(brief_data) {
 
+    clearInterval(world_time);
+    
     // Updates the page with the briefing data from the api
 
     set_world_time(brief_data.timezone.name);
