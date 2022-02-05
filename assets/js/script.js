@@ -79,16 +79,21 @@ function countries_received(country_data) {
 }
 function brief_received(brief_data) {
 
-    clearInterval(world_time);
-    
     // Updates the page with the briefing data from the api
 
+
+
+    // Clears the timer variable in the event there is another timer running
+    clearInterval(world_time);
+    
+    // Calls the function set the time based on the received country timezone    
     set_world_time(brief_data.timezone.name);
+
+    // Gets the DOM elements to be updated
     const mapEl = document.getElementById("map");
     const title = document.getElementById("title_text");
 
-    
-    // Set title
+    // Sets the title with the full name of the country
     title.textContent = brief_data.names.full;
 
     // Sets up map with the lat/long and zoom from the briefing object
@@ -96,7 +101,7 @@ function brief_received(brief_data) {
     const lng = parseFloat(brief_data.maps.long);
     const zoom = parseInt(brief_data.maps.zoom);
 
-    // Converts the quadrant of the lat/long from +/- to the respective compass heading
+    // Converts the quadrant of the lat/long from +/- to the respective compass heading to be used with the maps' required url
     let map_lat = lat < 0 ? "S" + Math.abs(lat).toString() : "N" + lat.toString(); 
     let map_lng = lng < 0 ? "W" + Math.abs(lng).toString() : "E" + lng.toString();
    
@@ -111,41 +116,38 @@ function brief_received(brief_data) {
     network_manager(current_weather_request);
     set_avg_temps(brief_data);
 
-    // ADD ADDITION METHOD CALLS TO DISPLAY OTHER DATA IN THE DOM
-
-
+    // ADD ADDITION METHOD CALLS HERE TO DISPLAY (I.E. LANGUAGE, CURRENCY, ADVISORIES AND ELECTRICITY) AFTER THAT DATA IS RECEIVED FROM THE API
 }
 function weather_received(weather_data) {
 
-    // If weather is not for requested country, re-requests weather
+    // If weather is the "default" wx, re-requests destination's weather
     if (weather_data.name === "Shuzenji" && weather_attempts < 5) {
         weather_attempts++;
         network_manager(current_weather_request);
     }
 
-    // Resets counter
+    // Resets the attempt counter
     weather_attempts = 0;
 
     // Creates DOM elements to put the weather data into
     const wx_iconEl = document.querySelector(".wx_icon");
     const current_tempEl = document.querySelector(".current_temp");
-  
+    const currents_wrapperEl = document.querySelector(".currents_wrapper");
+
+    // Getes the url for the wx icon image based on the weather condition id
     const wx_icon = get_wx_icon(weather_data.weather[0].id);
 
     // Puts the icon & temp into the DOM
     wx_iconEl.innerHTML = "<img src=" + wx_icon + ">";
     current_tempEl.innerHTML = format_temp(weather_data.main.temp);
     
-    // Gets the HTML wrapper for the other current tags
-    const currents_wrapperEl = document.querySelector(".currents_wrapper");
-    
     // Removes all child elements in the currents_wrapper div
     while(currents_wrapperEl.firstChild) {
         currents_wrapperEl.removeChild(currents_wrapperEl.firstChild);
     }
     
-    // Creates the other current tagboxes along with their respecitve elements and inserts the data
-    for(i = 0; i < 3; i++) {
+    // Creates the tagboxes to display the other current conditions along with their respecitve elements and inserts the data
+    for(i = 0; i < 6; i++) {
         const current_tag = document.createElement("div");
         current_tag.classList.add("current_tagbox", "tagbox");
 
@@ -157,17 +159,31 @@ function weather_received(weather_data) {
         
         switch(i) {
             case 0:
+                tag_label.textContent = "Conditions";
+                tag_value.textContent = weather_data.weather[0].main;
+                 break;
+            case 1:
+                tag_label.textContent = "Today's High";
+                tag_value.textContent = format_temp(weather_data.main.temp_max)
+                break;
+            case 2:
+                tag_label.textContent = "Today's Low";
+                tag_value.textContent = format_temp(weather_data.main.temp_min)
+                break;
+            case 3:
                 tag_label.textContent = "Wind";
                 tag_value.textContent = format_wind(weather_data.wind.deg, weather_data.wind.speed);
                 break;
-            case 1:
+            case 4:
                 tag_label.textContent = "Baro";
                 tag_value.textContent = Math.round(weather_data.main.pressure) + " mb (" + (Math.round(weather_data.main.pressure * 0.0295 * 100)/100).toFixed(2) + " in.)";
                 break;
-             case 2:
+             case 5:
                tag_label.textContent = "Humidity";
                tag_value.textContent = weather_data.main.humidity + "%";
-               break;          
+               break;
+               
+               // More data can be entered here if desired
         }
 
         current_tag.append(tag_label, tag_value);
@@ -182,7 +198,7 @@ function weather_received(weather_data) {
     // const temp_low = weather_data.main.temp_min;
     // const visibility = weather_data.main.visibility;
     // const description = weather_data.weather[0].description;
-    // const id = weather_data.weather[0].id;
+
 }
 
 // Misc functions
@@ -200,8 +216,8 @@ function get_countries() {
     }
 }
 function populate_country_list() {    
-    // Dynamically adds an option element with each country's name to the drop down list so the country can be selected
     
+    // Dynamically adds an option element with each country's name to the drop down list so the country can be selected
     for(let i=0; i < country_list.length; i++) {
         const optionEl = document.createElement("option");
         optionEl.setAttribute("value", country_list[i].name);
@@ -209,6 +225,7 @@ function populate_country_list() {
     }
 }
 function set_brief_url(selection) {
+    
     // returns the url of the select country, if there is no URL it will return a null
     
     let inList = null;
@@ -222,27 +239,30 @@ function set_brief_url(selection) {
     return inList;
 }
 function set_world_time(timezone) {
-
-       
+ 
     // Gets the current date/time in the selected country's timezone
-    const hour = moment().tz(timezone).format("H");
-    isDayTime = hour < 18 && hour > 6 ? true : false;
-   
+
     const country_dateEl = document.querySelector(".country_date");
     const country_timeEl = document.querySelector(".country_time");
 
-    // Calculates the difference between user's timezone and selected country's
+    // Gets the current hour in 24-hour format to determin if it's daytime or not
+    const hour = moment().tz(timezone).format("H");
+    isDayTime = hour < 18 && hour > 6 ? true : false;
+   
+    // Calculates the difference between assumed (guessed) user's timezone and selected country's
     const delta = moment.tz.zone(moment.tz.guess()).utcOffset(Date.now())/60 - moment.tz.zone(timezone).utcOffset(Date.now())/60;
 
     // Generates the string that tells the user what the difference in time is for the user
     let units = " hours ";
     let time_diff = null;
 
+    // If it's the time difference is 1, it will use a single unit.  Anything else will use the plural.
     if (delta !== 0) {
         if (Math.abs(delta) === 1) { units = " hour " };
         time_diff = delta < 0 ?  delta + units : "+" + delta + units;
     }
  
+    // Sets the timer to fire every second so the time continuously updates while the page is displayed
     world_time = setInterval(function() {
 
         const time = moment().tz(timezone).format("h:mm");
@@ -255,6 +275,8 @@ function set_world_time(timezone) {
     },  1000)
 }
 function format_temp(celsius) {
+    // Takes the celsius temp converts to Fahrenheit and returns a string with a formatted output i.e. 15C (59F)
+    
     const cel_format = Math.round(celsius) + "\u2103";
     const far_format = " (" + parseInt(Math.round(celsius) * 9/5 + 32) + "\u2109)";
     return cel_format + far_format;
@@ -315,7 +337,7 @@ function format_wind(degrees, speed) {
     // Rounds the speed to the nearest int
     let mph = Math.round(speed)
 
-    // Sets the compess direction based the reported degreess 
+    // Sets the compass direction based the reported degreess 
     if(degrees => 25 && degrees < 65) {
         direction = "NE";
     } else if(degrees => 65 && degrees < 115) {
@@ -337,7 +359,11 @@ function format_wind(degrees, speed) {
     return direction + " " + mph + "mph"; 
 }
 function get_wx_icon(code) {
+    
+    // Returns the respective wx_icon url based on the weather id code and if it's day/night
+    
     let wx_icon = null;
+    
     switch(true) {
         case (code < 300): // Thunderstorm
             wx_icon = "./assets/images/wx-icons/thunderstorms-day.svg"
@@ -366,8 +392,11 @@ function get_wx_icon(code) {
             break;
     }
 
+    // If the code doesn't match with a condition, it will return a no-data icon
     if(!wx_icon) {
         return "./assets/images/wx-icons/code-red.svg";
+    
+    // If it's not daytime, then it will replace day with night into the url
     } else if (!isDayTime) {
         return wx_icon.replace("day", "night")
     } else {

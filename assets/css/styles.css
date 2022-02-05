@@ -63,60 +63,38 @@ header {
 
 /* Start of current conditions data */
 
-.country_date {
+.time_container {
     font-family: 'Roboto';
-    font-weight: bold;
+}   
+
+.country_time {
     font-style: oblique;
+    font-size: 45px;
 }
 
+
+.country_date {
+    font-style: oblique;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+
 .time_diff {
-    font-size: 22px;
+    font-size: 24px;
 }
 
 .currents {
+    font-family: 'Roboto';
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 .current_temp {
-    font-family: 'Roboto';
     font-style: oblique;
     font-size: 35px;
     margin-left: 10px;
-
-}
-
-#currents_table {
-    margin: 0 auto;
-    margin-top: 20px;
-    text-align: center;
-    font-size: 10px;
-    font-family: 'Roboto';
-}
-
-#currents_table th {
-    padding-left: 5px;
-    padding-right: 5px;
-}
-
-#currents_table td {
-    border: black 1px solid;
-    font-size: 18px;
-    font-weight: 400;
-    padding: 4px;
-}
-
-.country_time {
-    font-family: 'Roboto';
-    font-style: oblique;
-    font-size: 45px;
-}
-
-.station_name {
-    margin-top: 10px;
-    font-size: x-small;
-    font-weight: bold;
 }
 
 .currents_wrapper {
@@ -144,7 +122,6 @@ header {
     min-width: 95px;
     margin: 5px;
     background: rgb(243, 240, 240);
-
 }
 
 .tagbox_label {
@@ -158,8 +135,7 @@ header {
 }
 
 .wx_icon {
-    width: 128px;
-    height: 128px;
+    width: 96px;
 }
 
 /* Used to change the font size of am/pm */
@@ -167,6 +143,7 @@ header {
     font-size: 26px;
 }
 
+/* For average temp tagbox backgrounds */
 .is-hot {
     background: tomato;
 }
