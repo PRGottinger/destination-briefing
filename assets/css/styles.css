@@ -6,8 +6,7 @@
 
 /* Start of Header */
 .header-bg {
-    background-image: linear-gradient(lightgrey, white);
-    /*background-color: lightgrey !important;*/
+    background-color: burlywood !important;
     height: 100px;
     /* width: 100%;
     display: flex;
@@ -31,8 +30,6 @@
 
 header div h1 {
     text-align: left;
-
-
 }
 
 header {
