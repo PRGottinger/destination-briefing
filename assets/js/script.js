@@ -418,6 +418,8 @@ countryNameEl.addEventListener('change', function(event) {
         network_manager("country-briefing?" + brief_url);
         countryNameEl.value = "";
     } else {
+
+        //Need to remove alert and add modal 
         alert("No matching country has been selected! Please select a copy on the list");
         countryNameEl.focus();
     }
