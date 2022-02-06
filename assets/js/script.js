@@ -68,7 +68,7 @@ function network_manager(request) {
     });
 }
 
-// Start of received data handlers
+// Handles the returned data from the api calls
 function countries_received(country_data) {
    
     // When the data is recieved from the network call it saves it in the global variable and saves it to local storage for later use, the populates the drop-down
@@ -80,8 +80,6 @@ function countries_received(country_data) {
 function brief_received(brief_data) {
 
     // Updates the page with the briefing data from the api
-
-
 
     // Clears the timer variable in the event there is another timer running
     clearInterval(world_time);
@@ -108,14 +106,18 @@ function brief_received(brief_data) {
     // Changes the map's source URL to show the respective country
     mapEl.src = "https://maps.google.com/maps?q="+ map_lat + map_lng + "&t=&z=" + zoom + "&ie=UTF8&iwloc=&output=embed";
 
-    
     // Takes the lat/long from the country brief data received to get the the current weather information in the event it needs to be called again
     current_weather_request = "weather?lat=" + parseInt(lat) + "&lon=" + parseInt(lng);
 
     // Calls the other methods to display current conditions and average temps 
+    console.log(brief_data);
     network_manager(current_weather_request);
     set_avg_temps(brief_data);
-
+    set_currency(brief_data.currency);
+    set_language(brief_data.language);
+    set_electricity(brief_data.electricity);
+    set_other_info(brief_data);
+    
     // ADD ADDITION METHOD CALLS HERE TO DISPLAY (I.E. LANGUAGE, CURRENCY, ADVISORIES AND ELECTRICITY) AFTER THAT DATA IS RECEIVED FROM THE API
 }
 function weather_received(weather_data) {
@@ -129,7 +131,7 @@ function weather_received(weather_data) {
     // Resets the attempt counter
     weather_attempts = 0;
 
-    // Creates DOM elements to put the weather data into
+    // Creates DOM elements to put the current weather data into
     const wx_iconEl = document.querySelector(".wx_icon");
     const current_tempEl = document.querySelector(".current_temp");
     const currents_wrapperEl = document.querySelector(".currents_wrapper");
@@ -145,63 +147,47 @@ function weather_received(weather_data) {
     while(currents_wrapperEl.firstChild) {
         currents_wrapperEl.removeChild(currents_wrapperEl.firstChild);
     }
-    
+
     // Creates the tagboxes to display the other current conditions along with their respecitve elements and inserts the data
     for(i = 0; i < 6; i++) {
-        const current_tag = document.createElement("div");
-        current_tag.classList.add("current_tagbox", "tagbox");
 
-        const tag_label = document.createElement("p");
-        tag_label.classList.add("tagbox_label");
-
-        const tag_value = document.createElement("p");
-        tag_value.classList.add("tagbox_value");
+        let tag_label = null;
+        let tag_value = null;
         
         switch(i) {
             case 0:
-                tag_label.textContent = "Conditions";
-                tag_value.textContent = weather_data.weather[0].main;
+                tag_label = "Conditions";
+                tag_value = weather_data.weather[0].main;
                  break;
             case 1:
-                tag_label.textContent = "Today's High";
-                tag_value.textContent = format_temp(weather_data.main.temp_max)
+                tag_label = "Today's High";
+                tag_value = format_temp(weather_data.main.temp_max)
                 break;
             case 2:
-                tag_label.textContent = "Today's Low";
-                tag_value.textContent = format_temp(weather_data.main.temp_min)
+                tag_label = "Today's Low";
+                tag_value = format_temp(weather_data.main.temp_min)
                 break;
             case 3:
-                tag_label.textContent = "Wind";
-                tag_value.textContent = format_wind(weather_data.wind.deg, weather_data.wind.speed);
+                tag_label = "Wind";
+                tag_value = format_wind(weather_data.wind.deg, weather_data.wind.speed);
                 break;
             case 4:
-                tag_label.textContent = "Baro";
-                tag_value.textContent = Math.round(weather_data.main.pressure) + " mb (" + (Math.round(weather_data.main.pressure * 0.0295 * 100)/100).toFixed(2) + " in.)";
+                tag_label = "Baro";
+                tag_value = Math.round(weather_data.main.pressure) + " mb (" + (Math.round(weather_data.main.pressure * 0.0295 * 100)/100).toFixed(2) + " in.)";
                 break;
              case 5:
-               tag_label.textContent = "Humidity";
-               tag_value.textContent = weather_data.main.humidity + "%";
+               tag_label = "Humidity";
+               tag_value = weather_data.main.humidity + "%";
                break;
                
                // More data can be entered here if desired
         }
 
-        current_tag.append(tag_label, tag_value);
-        currents_wrapperEl.appendChild(current_tag);
+        currents_wrapperEl.appendChild(create_tagbox(tag_label, tag_value));
     }
-
-    // Additional items we could add to the currents
-    // const wx_main = weather_data.weather[0].main;       
-    // const cloud_coverage = weather_data.clouds.all;
-    // const cloud_code = weather_data.clouds.code;
-    // const temp_hi = weather_data.main.temp_max;
-    // const temp_low = weather_data.main.temp_min;
-    // const visibility = weather_data.main.visibility;
-    // const description = weather_data.weather[0].description;
-
 }
 
-// Misc functions
+// If the list of available countries is not in local storage, then it will make an api call to get them and then store them in local storage
 function get_countries() {
     // Checks to see if the list of countries is available in local storage. If it is, it puts it into the global variable.
     // If not, it makes a network call to retrieve the data from the api which will store it in local storage and put it in the global variable.
@@ -214,7 +200,10 @@ function get_countries() {
     } else {
         network_manager("countries");        
     }
+
+
 }
+// Puts the avaialbe countries into the drop-down option list
 function populate_country_list() {    
     
     // Dynamically adds an option element with each country's name to the drop down list so the country can be selected
@@ -224,26 +213,15 @@ function populate_country_list() {
         countryListEl.appendChild(optionEl);
     }
 }
-function set_brief_url(selection) {
-    
-    // returns the url of the select country, if there is no URL it will return a null
-    
-    let inList = null;
-    
-    country_list.forEach(element => {    
-        if(element.name === selection) {
-            inList = element.url;
-        }
-    });
 
-    return inList;
-}
+// Sets the DOM elements with received data
 function set_world_time(timezone) {
  
     // Gets the current date/time in the selected country's timezone
 
     const country_dateEl = document.querySelector(".country_date");
     const country_timeEl = document.querySelector(".country_time");
+    const country_timezoneEl = document.querySelector(".country_timezone");
 
     // Gets the current hour in 24-hour format to determin if it's daytime or not
     const hour = moment().tz(timezone).format("H");
@@ -256,10 +234,13 @@ function set_world_time(timezone) {
     let units = " hours ";
     let time_diff = null;
 
-    // If it's the time difference is 1, it will use a single unit.  Anything else will use the plural.
+    // Combines the time difference with the units.  If the time is ahead it adds "+", likewise behind "-"
+    // 1 hour difference will use singular form, all others would be plural
     if (delta !== 0) {
         if (Math.abs(delta) === 1) { units = " hour " };
         time_diff = delta < 0 ?  delta + units : "+" + delta + units;
+    } else {
+        time_diff = "0 hours"
     }
  
     // Sets the timer to fire every second so the time continuously updates while the page is displayed
@@ -270,16 +251,10 @@ function set_world_time(timezone) {
         const day = moment().tz(timezone).format("dddd, MMMM D, YYYY");
 
         // Inserts the selected country's formatted date and time into the DOM
-        if(country_timeEl) { country_timeEl.innerHTML = "<p>" + time + "<span class='subscript'>" + part +  "</span><span class='time_diff'> (" + time_diff + ")</span></p>"; }
         if(country_dateEl) { country_dateEl.innerHTML = "<p>" + day + "</p>"; }
+        if(country_timeEl) { country_timeEl.innerHTML = "<p>" + time + "<span class='subscript'>" + part +  "</span><span class='time_diff'> (" + time_diff + ")</span></p>"; }
+        if(country_timezoneEl) {  country_timezoneEl.innerHTML = "<p> Timezone (" + timezone + ")</p>"; }
     },  1000)
-}
-function format_temp(celsius) {
-    // Takes the celsius temp converts to Fahrenheit and returns a string with a formatted output i.e. 15C (59F)
-    
-    const cel_format = Math.round(celsius) + "\u2103";
-    const far_format = " (" + parseInt(Math.round(celsius) * 9/5 + 32) + "\u2109)";
-    return cel_format + far_format;
 }
 function set_avg_temps(temp_data) {
     
@@ -289,15 +264,17 @@ function set_avg_temps(temp_data) {
     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
     // This is the main container hard-coded in the HTML file
-    const temp_wrapperEl = document.querySelector(".average_temps_wrapper");
+    const average_temps = document.querySelector(".average_temps_wrapper");
 
     // Clears out any children currently in the DOM
-    while(temp_wrapperEl.firstChild) {
-        temp_wrapperEl.removeChild(temp_wrapperEl.firstChild);
+    while(average_temps.firstChild) {
+        average_temps.removeChild(average_temps.firstChild);
     }
 
     // Creates the DOM elements for each month in the array and places them in the DOM
     for(let i=0; i < 12; i++) {
+
+        const month_tag = create_tagbox( months[i].slice(0, 3), format_temp(temp_data.weather[months[i]].tAvg));
 
         // Determines if the average temp is hot/cold/nice and creates the appropriate class to be added to the tagbox
         let extreme_class = null;
@@ -308,26 +285,114 @@ function set_avg_temps(temp_data) {
         } else {
             extreme_class = "is-nice"
         }
-
-        // Div to hold both the month name <p> and avg temp <p>
-        const month_tag = document.createElement("div");
         month_tag.classList.add("month_tagbox", "tagbox", extreme_class);
-
-        // Month name label <p>, abbreviates the month name with just the first 3 letters
-        const tag_label = document.createElement("p");
-        tag_label.classList.add("tagbox_label");
-        tag_label.textContent = months[i].slice(0, 3);
-
-        // Month avg temp <p>, calls the format temp to display both C and F
-        const tag_value = document.createElement("p");
-        tag_value.classList.add("tagbox_value");
-        tag_value.textContent = format_temp(temp_data.weather[months[i]].tAvg);       
         
-        // appends the children to their respective parent to display in the DOM
-        month_tag.append(tag_label, tag_value);
-        temp_wrapperEl.appendChild(month_tag);
+        // Adds the tagbox to the wrapper
+        average_temps.appendChild(month_tag);
     }
 }
+function set_currency(currency_data) {
+    const currencyEl = document.querySelector(".currency_wrapper");
+    
+    // Uses the built-in number formatter and sets it to the current country's code
+    const currency = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: currency_data.code
+    })
+
+    // Removes any previous currency data
+    while(currencyEl.firstChild) {
+        currencyEl.removeChild(currencyEl.firstChild);
+    }
+
+    // Gets the DOM elements to be used as a tagbox to hold the label and data
+    const currency_name = create_tagbox("Currency Used", currency_data.name + " (" + currency_data.code + ")");
+    const currency_rate = create_tagbox("Rate to USD", currency.format(currency_data.rate) + " = $1.00");
+
+    currencyEl.append(currency_name, currency_rate);
+}
+function set_language(language_data) {
+
+    // Updates the DOM with received language information
+
+    // Creates a variable for the correct DOM element
+    const languageEl = document.querySelector(".language_wrapper");
+
+    // Clears any previous country's languages
+    while(languageEl.firstChild) {
+        languageEl.removeChild(languageEl.firstChild);
+    }
+
+    // Updates the DOM with any language information
+    if(language_data.length === 0) {
+        // If there is no language data it will put a message in the DOM
+        const no_data_message = document.createElement("p");
+        no_data_message.textContent = "No Language Data Provided";
+        languageEl.appendChild(no_data_message);
+    } else {
+        // Get each language by iterating through the array of languages
+        language_data.forEach(function(l){
+            const language = create_tagbox("Spoken Language - " + l.language, "Official - " + l.official);
+            languageEl.appendChild(language);
+        });
+    }
+}
+function set_electricity(electricity_data) {
+
+    // Updates the DOM with received electricity information
+
+    // Element from the DOM to place the data
+    const electricity_wrapperEl = document.querySelector(".electricity_wrapper");
+    
+    // Clears out any previous data
+    while (electricity_wrapperEl.firstChild) {
+        electricity_wrapperEl.removeChild(electricity_wrapperEl.firstChild);
+    }
+    
+    // Gets a tagbox with the voltage data
+    const electricity_dataEl = create_tagbox("Voltage", electricity_data.voltage + " volts (" + electricity_data.frequency + "hz)");
+    
+    // Gets the plugs used and creates a string
+    let plug_text = null;
+
+    electricity_data.plugs.forEach(function(type, index) {    
+        if(index === 0) {
+            plug_text = type
+        } else {
+            plug_text = plug_text + ", " + type;
+        }
+    })
+    
+    // Gets a tagbox with the plug data
+    const plug_typesEl = create_tagbox("Plugs Used", plug_text);
+
+    // Inserts the new tagboxes into the parent element in the DOM
+    electricity_wrapperEl.append(electricity_dataEl, plug_typesEl);
+}
+function set_other_info(brief_data) {
+    
+    // Updates the DOM with received additional information
+
+    const other_info_wrapperEl = document.querySelector(".other_info_wrapper");
+
+    while(other_info_wrapperEl.firstChild) {
+        other_info_wrapperEl.removeChild(other_info_wrapperEl.firstChild);
+    }
+
+    // Drinking Water
+    const drinking_water = brief_data.water.short ? brief_data.water.short.toUpperCase() : "No Data Provided";
+    const water_info = create_tagbox("Drinking Water", drinking_water);
+    other_info_wrapperEl.appendChild(water_info);
+
+    // Display vaccination recommendations, if any
+    if(brief_data.vaccinations.length > 0) {
+        brief_data.vaccinations.forEach(function(v) {
+            other_info_wrapperEl.appendChild(create_tagbox("Vaccination - " + v.name,v.message));
+        });  
+    }
+}
+
+// Misc functions
 function format_wind(degrees, speed) {
     
     // Formats the wind to be be NE 5mph instead of using the the decimal speed and degrees (e.g. speed: 5.11343 and degrees: 64.333)
@@ -357,6 +422,27 @@ function format_wind(degrees, speed) {
     }
 
     return direction + " " + mph + "mph"; 
+}
+function format_temp(celsius) {
+    // Takes the celsius temp converts to Fahrenheit and returns a string with a formatted output i.e. 15C (59F)
+    
+    const cel_format = Math.round(celsius) + "\u2103";
+    const far_format = " (" + parseInt(Math.round(celsius) * 9/5 + 32) + "\u2109)";
+    return cel_format + far_format;
+}
+function get_brief_url(selection) {
+    
+    // returns the url of the select country, if there is no URL it will return a null
+    
+    let inList = null;
+    
+    country_list.forEach(element => {    
+        if(element.name === selection) {
+            inList = element.url;
+        }
+    });
+
+    return inList;
 }
 function get_wx_icon(code) {
     
@@ -404,13 +490,30 @@ function get_wx_icon(code) {
     }
     
 }
+function create_tagbox(label, value) {
+    
+    const tagboxEl = document.createElement("div");
+    const tag_label = document.createElement("p");
+    const tag_value = document.createElement("p");
+    
+    tagboxEl.classList.add("tagbox")
+    tag_label.classList.add("tagbox_label");
+    tag_value.classList.add("tagbox_value");
+
+    tag_label.innerHTML = label;
+    tag_value.innerHTML = value;
+
+    tagboxEl.append(tag_label, tag_value);
+
+    return tagboxEl;
+}
 
 // Event listeners that are initiated on page load
 countryNameEl.addEventListener('change', function(event) {
     // Triggers when the user selects a country from the drop-down list
     
     // Gets the url of the briefing for the selected country
-    const brief_url = set_brief_url(event.target.value);
+    const brief_url = get_brief_url(event.target.value);
 
     // Makes sure there is a url and sends the request to the network manager
     if(brief_url) { 
