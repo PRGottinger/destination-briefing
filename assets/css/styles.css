@@ -101,28 +101,17 @@
     font-family: "Roboto";
   }
 
-  #currents_table th {
-    padding-left: 5px;
-    padding-right: 5px;
-  }
-
-  #currents_table td {
-    border: black 1px solid;
-    font-size: 18px;
-    font-weight: 400;
-    padding: 4px;
-  }
-
   .country_time {
     font-family: "Roboto";
     font-style: oblique;
     font-size: 45px;
   }
 
-  .station_name {
-    margin-top: 10px;
-    font-size: x-small;
+  .country_timezone {
+    font-size: 12px;
+    font-style: italic;
     font-weight: bold;
+    margin: 0;
   }
 
   .currents_wrapper {
@@ -135,6 +124,21 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .currency_wrapper {
+    /* display: flex; */
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    border-bottom: black 2px solid;
+    margin-bottom: 25px;
+  }
+
+  .language_wrapper {
+    /* display: flex; */
+    flex-wrap: wrap;
+    justify-content: flex-start;
   }
 
   .tagbox {
@@ -148,16 +152,18 @@
     border-radius: 10px;
     min-width: 95px;
     margin: 5px;
-    background: rgb(243, 240, 240);
+    background: whitesmoke;
   }
 
   .tagbox_label {
+    margin: 0;
     font-size: 12px;
     font-weight: bold;
     font-style: oblique;
   }
 
   .tagbox_value {
+    margin: 0;
     font-size: 12px;
   }
 

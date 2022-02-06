@@ -69,8 +69,9 @@
         </header>
         <div class="card-content">
           <div class="time_container content">
-            <div class="country_time"></div>
             <div class="country_date"></div>
+            <div class="country_time"></div>
+            <div class="country_timezone"></div>
           </div>
         </div>
       </div>
@@ -84,7 +85,6 @@
           </p>
         </header>
         <div class="card-content">
-          <div class="content">
             <div class="currents">
               <!-- <img src="./assets/images/wx-icons/clear-day.svg" alt="">      -->
               <div class="wx_icon"></div>
@@ -93,7 +93,6 @@
             <div class="currents_wrapper">
               <!-- Additional current elements dynamically entered here -->
             </div>
-          </div>
         </div>
       </div>
 
@@ -101,11 +100,11 @@
       <div id="weather-historical" class="card column">
         <header class="card-header">
           <p class="card-header-title">
-            Historical Weather
+            Average Monthly Temperatures
           </p>
         </header>
         <div class="card-content">
-          <div class="average_temps_wrapper content">
+          <div class="average_temps_wrapper">
             <!-- Avg temps dynamically entered here -->
           </div>
           <span class="badge is-hot rounded-pill">Hot</span>
@@ -120,9 +119,46 @@
     <h1 class="misc-info">Section</h1>
     <section class="section columns">
 
+
+      <!-- Language / Currency -->
+      <div id="language_currency" class="card column">
+        <header class="card-header">
+          <p class="card-header-title">
+            Currency and Language
+          </p>
+        </header>
+        <div class="card-content">
+          <div class="currency_wrapper"></div>
+          <div class="language_wrapper"></div>
+        </div>
+      </div>
+
       <!-- Plug / Electricity card-->
       <div id="connectivity" class="card column">
+        <header class="card-header">
+          <p class="card-header-title">
+            Electricity Info
+          </p>
+        </header>
+        
+        <div class="card-content">
+          <div class="electricity_wrapper"></div>
+        </div>
+      
+      </div>
 
+       <!-- Other Info -->
+       <div id="other_info" class="card column">
+        <header class="card-header">
+          <p class="card-header-title">
+            Other Info
+          </p>
+        </header>
+        
+        <div class="card-content">
+          <div class="other_info_wrapper"></div>
+        </div>
+      
       </div>
 
     </section>
