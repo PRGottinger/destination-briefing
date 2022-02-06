@@ -166,12 +166,14 @@
     height: 128px;
   }
 
+
   /* Used to change the font size of am/pm */
   .subscript {
     font-size: 26px;
   }
 
   .is-hot {
+
     background: tomato;
   }
 
