@@ -6,6 +6,7 @@ let isDayTime = null;
 
 const countryNameEl = document.getElementById("country_name");
 const countryListEl = document.getElementById("country_list");
+const modalEl = document.querySelector(".modal-alert");
 
 // Handles asynchronous fetch requests and then calls the respective method to handle the data once its received 
 function network_manager(request) {
@@ -39,10 +40,15 @@ function network_manager(request) {
             
         default:
             // Alerts the user if an improper request parameter was passed in and the returns false to terminate the function
-
-            alert("Invalid Request!")
+            alert_modal("Netowrk Error!", "An invalid request was sent to the network manager.. Please try again.");
             return false;
     }
+
+    if(!navigator.onLine) {
+        alert_modal("Connectivity Issue!", "Your internet connection seems to be offline, please try again later.");
+        return false;
+    }
+
     // Sends out the fetch request based on the url set above
     fetch(apiUrl).then(function(response){
         if(response.ok) { response.json().then(function(data){
@@ -58,12 +64,14 @@ function network_manager(request) {
                         weather_received(data);
                         break
                     default:
+                        alert_modal("Netowrk Error!", "An invalid request was sent to the network manager.. Please try again.");
+                        return false;
                 }
             });
         }
         else {
             // If the response from the fetch is anything but OK.
-            alert("A network error has occured!\n\n" + response);
+            alert_modal("Netowrk Error!", "An bad response was received back from the network request. Please try again.\n\nThe network response status code: " + response.status);
         } 
     });
 }
@@ -526,6 +534,13 @@ function create_tagbox(label, value) {
 
     return tagboxEl;
 }
+function alert_modal(title, message) {
+    const modal_TitleEl = document.querySelector(".modal-title");
+    const modal_MsgEl = document.querySelector(".modal-msg");
+    modal_TitleEl.innerHTML = "<p>" + title + "</p>";
+    modal_MsgEl.innerHTML = "<p>" + message + "</p>";
+    modalEl.style.display = "block";
+}
 
 // Event listeners that are initiated on page load
 countryNameEl.addEventListener('change', function(event) {
@@ -546,6 +561,10 @@ countryNameEl.addEventListener('change', function(event) {
         countryNameEl.focus();
     }
 });
+modalEl.addEventListener('click', function(event) {
+    modalEl.style.display = "none";
+});
    
 // Loads the countries into the drop down on page load
 get_countries();
+
