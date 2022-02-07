@@ -128,7 +128,6 @@
   }
 
   .currency_wrapper {
-    /* display: flex; */
     flex-wrap: wrap;
     justify-content: flex-start;
     border-bottom: black 2px solid;
@@ -136,7 +135,6 @@
   }
 
   .language_wrapper {
-    /* display: flex; */
     flex-wrap: wrap;
     justify-content: flex-start;
   }
@@ -198,4 +196,49 @@
   .rounded-pill {
     padding: 0.2em 0.6em;
     border-radius: 20% / 50%;
+  }
+
+  .modal-alert {
+    display: none;
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 40vw;
+    top: 30vh;
+    width: 350px; 
+    overflow: auto;
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.7); /* Black w/ opacity */
+  }
+
+  .modal-title {
+    display: flex;
+    justify-content: space-between;
+    background: whitesmoke;
+  }
+
+  .modal-title p {
+    padding: 5px;
+    padding-left: 10px;
+    font-size: 14px;
+    font-weight: bold;
+  }
+
+  .modal-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .modal-button {
+    /* width: 100px; */
+    width: 100px;
+    height: 30px;
+    margin: 10px;
+    border-radius: 18px;
+  }
+  .modal-msg {
+    margin: 10px;
+    color: white;
   }
