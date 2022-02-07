@@ -150,7 +150,7 @@
     padding: 5px;
     padding-top: 0px;
     border-radius: 10px;
-    min-width: 95px;
+    min-width: 100px;
     margin: 5px;
     background: whitesmoke;
   }
@@ -179,7 +179,6 @@
   }
 
   .is-hot {
-
     background: tomato;
   }
 
@@ -189,6 +188,11 @@
 
   .is-nice {
     background: springgreen;
+  }
+
+  .legend {
+    display: flex;
+    justify-content: space-evenly;
   }
 
   .rounded-pill {

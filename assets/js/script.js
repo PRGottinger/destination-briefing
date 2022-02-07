@@ -92,7 +92,7 @@ function brief_received(brief_data) {
     const title = document.getElementById("title_text");
 
     // Sets the title with the full name of the country
-    title.textContent = brief_data.names.full;
+    title.innerHTML = brief_data.names.full;
 
     // Sets up map with the lat/long and zoom from the briefing object
     const lat = parseFloat(brief_data.maps.lat);
@@ -117,8 +117,6 @@ function brief_received(brief_data) {
     set_language(brief_data.language);
     set_electricity(brief_data.electricity);
     set_other_info(brief_data);
-    
-    // ADD ADDITION METHOD CALLS HERE TO DISPLAY (I.E. LANGUAGE, CURRENCY, ADVISORIES AND ELECTRICITY) AFTER THAT DATA IS RECEIVED FROM THE API
 }
 function weather_received(weather_data) {
 
@@ -223,6 +221,12 @@ function set_world_time(timezone) {
     const country_timeEl = document.querySelector(".country_time");
     const country_timezoneEl = document.querySelector(".country_timezone");
 
+    if(!timezone) {
+        // Error
+        country_timeEl.innerHTML = "Data Not Available";
+        return false;
+    }
+
     // Gets the current hour in 24-hour format to determin if it's daytime or not
     const hour = moment().tz(timezone).format("H");
     isDayTime = hour < 18 && hour > 6 ? true : false;
@@ -290,10 +294,20 @@ function set_avg_temps(temp_data) {
         // Adds the tagbox to the wrapper
         average_temps.appendChild(month_tag);
     }
+
+    const temp_container = document.querySelector("#temp_container");
+
 }
 function set_currency(currency_data) {
     const currencyEl = document.querySelector(".currency_wrapper");
     
+    if(!currency_data.code) {
+        // Error
+        currencyEl.innerHTML = "Data Not Available";
+        return false;
+    }
+
+
     // Uses the built-in number formatter and sets it to the current country's code
     const currency = new Intl.NumberFormat('en-US', {
         style: 'currency',
@@ -350,24 +364,29 @@ function set_electricity(electricity_data) {
     }
     
     // Gets a tagbox with the voltage data
-    const electricity_dataEl = create_tagbox("Voltage", electricity_data.voltage + " volts (" + electricity_data.frequency + "hz)");
-    
-    // Gets the plugs used and creates a string
-    let plug_text = null;
+    if(electricity_data.voltage) {
+        electricity_wrapperEl.appendChild(create_tagbox("Voltage", electricity_data.voltage + " volts (" + electricity_data.frequency + "hz)"));
+    } else {
+        electricity_wrapperEl.innerHTML = "<p>No Electrical Data Provided.</p>"
+        return false;
+    }
 
+    // If there's no plug data it exit the function
+    if(electricity_data.plugs.length === 0) {
+        return false;
+    }
+    
+    // Gets the plugs used and creates a consecutive string or the plug types
+    let plug_text = null;
     electricity_data.plugs.forEach(function(type, index) {    
         if(index === 0) {
-            plug_text = type
+           plug_text = type;
         } else {
             plug_text = plug_text + ", " + type;
         }
     })
-    
-    // Gets a tagbox with the plug data
-    const plug_typesEl = create_tagbox("Plugs Used", plug_text);
 
-    // Inserts the new tagboxes into the parent element in the DOM
-    electricity_wrapperEl.append(electricity_dataEl, plug_typesEl);
+    electricity_wrapperEl.appendChild(create_tagbox("Plugs Used", plug_text));
 }
 function set_other_info(brief_data) {
     
