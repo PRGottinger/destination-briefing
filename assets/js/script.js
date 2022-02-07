@@ -45,7 +45,7 @@ function network_manager(request) {
     }
 
     if(!navigator.onLine) {
-        alert_modal("Connectivity Issue!", "You're internet connection seems to be offline, please try again later.");
+        alert_modal("Connectivity Issue!", "Your internet connection seems to be offline, please try again later.");
         return false;
     }
 
@@ -561,7 +561,6 @@ countryNameEl.addEventListener('change', function(event) {
         countryNameEl.focus();
     }
 });
-
 modalEl.addEventListener('click', function(event) {
     modalEl.style.display = "none";
 });
