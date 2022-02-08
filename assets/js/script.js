@@ -107,7 +107,7 @@ function brief_received(brief_data) {
     // Sets up map with the lat/long and zoom from the briefing object
     const lat = parseFloat(brief_data.maps.lat);
     const lng = parseFloat(brief_data.maps.long);
-    const zoom = parseInt(brief_data.maps.zoom);
+    const zoom = !brief_data.maps.zoom ? 4 : parseInt(brief_data.maps.zoom);
 
     // Converts the quadrant of the lat/long from +/- to the respective compass heading to be used with the maps' required url
     let map_lat = lat < 0 ? "S" + Math.abs(lat).toString() : "N" + lat.toString();
@@ -133,12 +133,15 @@ function weather_received(weather_data) {
     if (weather_data.name === "Shuzenji" && weather_attempts < 5) {
         weather_attempts++;
         network_manager(current_weather_request);
+        return false;
+    } else if (weather_data.name === "Shuzenji") {
+        alert_modal("Current WX Error", "There seems to be an issue with the current weather information. Please try again to get the lastest current conditions.");
     }
+
+    console.log(weather_attempts, weather_data);
 
     // Resets the attempt counter
     weather_attempts = 0;
-
-    console.log(weather_data);
 
     // Creates DOM elements to put the current weather data into
     const wx_iconEl = document.querySelector(".wx_icon");
@@ -231,8 +234,11 @@ function set_world_time(timezone) {
     const country_timezoneEl = document.querySelector(".country_timezone");
 
     if(!timezone) {
-        // Error
-        country_timeEl.innerHTML = "Data Not Available";
+        // If not timezone data is received it will clear out the current time and display that there's no data
+        alert_modal("Data Error", "No timezone information was received from the network, please try again later.");
+        country_dateEl.innerHTML = "";
+        country_timeEl.innerHTML = "<p>Data Not Available</p>";
+        country_timezoneEl.innerHTML = "";
         return false;
     }
 
@@ -282,6 +288,11 @@ function set_avg_temps(temp_data) {
     // Clears out any children currently in the DOM
     while(average_temps.firstChild) {
         average_temps.removeChild(average_temps.firstChild);
+    }
+
+    // Ensures that the data is valid from the received data, if not it does not display any information
+    if(temp_data.weather[months[0]].tMax == 100 && temp_data.weather[months[0]].tMin == -100 ) {
+        return false;        
     }
 
     // Creates the DOM elements for each month in the array and places them in the DOM
