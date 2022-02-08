@@ -233,8 +233,8 @@ function set_world_time(timezone) {
     const country_timezoneEl = document.querySelector(".country_timezone");
 
     if(!timezone) {
-        // Error
-        country_timeEl.innerHTML = "Data Not Available";
+        // Error no timezone data was present in the received data object
+        country_timeEl.innerHTML = "Timezone information not Available";
         return false;
     }
 
@@ -286,12 +286,19 @@ function set_avg_temps(temp_data) {
         average_temps.removeChild(average_temps.firstChild);
     }
 
+    // Handles if the monthly average temps data is valid or not.
+    if(temp_data.weather[months[0]].tMin == -100 && temp_data.weather[months[0]].tMax == 100 ) {
+        // Monthly temp data is invalid
+        average_temps.innerHTML ="<p> Valid monthly average temperatures are not currently available."
+        return false;
+    }
+
     // Creates the DOM elements for each month in the array and places them in the DOM
     for(let i=0; i < 12; i++) {
 
         const month_tag = create_tagbox( months[i].slice(0, 3), format_temp(temp_data.weather[months[i]].tAvg));
 
-        // Determines if the average temp is hot/cold/nice and creates the appropriate class to be added to the tagbox
+        // Determines if the average temp is hot/cold/nice and creates the appropriate extreme class to be added to the tagbox
         let extreme_class = null;
         if (Math.round(temp_data.weather[months[i]].tAvg) > 25) {
             extreme_class = "is-hot";
@@ -300,6 +307,7 @@ function set_avg_temps(temp_data) {
         } else {
             extreme_class = "is-nice"
         }
+
         month_tag.classList.add("month_tagbox", "tagbox", extreme_class);
         
         // Adds the tagbox to the wrapper
@@ -378,7 +386,7 @@ function set_electricity(electricity_data) {
     if(electricity_data.voltage) {
         electricity_wrapperEl.appendChild(create_tagbox("Voltage", electricity_data.voltage + " volts (" + electricity_data.frequency + "hz)"));
     } else {
-        electricity_wrapperEl.innerHTML = "<p>No Electrical Data Provided.</p>"
+        electricity_wrapperEl.appendChild(create_tagbox("Voltage", "No Data Provided"));
         return false;
     }
 
