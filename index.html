@@ -13,9 +13,11 @@
 </head>
 <body>
 
-  <header id="header-mobile">
+  <header class="container header-bg">
 
-    <h1 id="title_wrapper" class="title title_wrapper is-3">Navigation Station</h1>
+    <div>
+      <h1 class="title is-3">Navigation Station</h1>
+    </div>
 
     <div id="search_country">
       <!-- Drop down list with the available country names -->
@@ -23,28 +25,6 @@
       <datalist id="country_list">
         <!-- Dynamically enters list of countries here -->
       </datalist>
-    </div>
-
-  </header>
-
-  <header class="header-bg mb-0" id="content-desktop">
-    <div class="container level header-bg">
-      <div class="level-left">
-        <div class="level-item">
-          <h1 id="title_wrapper" class="title title_wrapper is-3">Navigation Station</h1>
-        </div>
-      </div>
-
-      <div class="level-right">
-        <div class="level-item" id="search_country">
-          <!-- Drop down list with the available country names -->
-          <label for="country_name">Select Country</label>
-          <input list="country_list" name="country" id="country_name">
-          <datalist id="country_list">
-            <!-- Dynamically enters list of countries here -->
-          </datalist>
-        </div>
-      </div>
     </div>
 
   </header>
