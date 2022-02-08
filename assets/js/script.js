@@ -87,6 +87,8 @@ function countries_received(country_data) {
 }
 function brief_received(brief_data) {
 
+    console.log(brief_data);
+
     // Updates the page with the briefing data from the api
 
     // Clears the timer variable in the event there is another timer running
@@ -118,7 +120,6 @@ function brief_received(brief_data) {
     current_weather_request = "weather?lat=" + parseInt(lat) + "&lon=" + parseInt(lng);
 
     // Calls the other methods to display current conditions and average temps 
-    console.log(brief_data);
     network_manager(current_weather_request);
     set_avg_temps(brief_data);
     set_currency(brief_data.currency);
@@ -136,6 +137,8 @@ function weather_received(weather_data) {
 
     // Resets the attempt counter
     weather_attempts = 0;
+
+    console.log(weather_data);
 
     // Creates DOM elements to put the current weather data into
     const wx_iconEl = document.querySelector(".wx_icon");
@@ -428,21 +431,21 @@ function format_wind(degrees, speed) {
     
     // Rounds the speed to the nearest int
     let mph = Math.round(speed)
-
-    // Sets the compass direction based the reported degreess 
-    if(degrees => 25 && degrees < 65) {
+    
+    // Sets the compass direction based the reported degreess
+    if(degrees >= 25 && degrees < 65) {
         direction = "NE";
-    } else if(degrees => 65 && degrees < 115) {
+    } else if(degrees >= 65 && degrees < 115) {
         direction = "E";
-    } else if(degrees => 115 && degrees < 155) {
+    } else if(degrees >= 115 && degrees < 155) {
         direction = "SE";
-    } else if (degrees => 155 && degrees < 215) {
+    } else if (degrees >= 155 && degrees < 215) {
         direction = "S";
-    } else if (degrees => 215 && degrees < 245) {
+    } else if (degrees >= 215 && degrees < 245) {
         direction = "SW";
-    } else if (degrees => 245 && degrees < 295) {
+    } else if (degrees >= 245 && degrees < 295) {
         direction = "W";
-    } else if (degrees => 295 && degrees < 335) {
+    } else if (degrees >= 295 && degrees < 335) {
         direction = "NW"
     } else {
         direction = "N";
