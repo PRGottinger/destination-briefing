@@ -31,11 +31,8 @@ function network_manager(request) {
 
             apiUrl = parameter + "?format=json";
             break;
-
-        case "weather":
-            // This address is for an object to retrieve the current weather for the lat/long
-            // Example format: https://fcc-weather-api.glitch.me/api/current?lat=25.9&lon=50.6
-            apiUrl = "https://fcc-weather-api.glitch.me/api/current?" + parameter;
+          case "weather":
+            weather_received(data);
             break;
 
         default:
@@ -210,7 +207,14 @@ function get_countries() {
         network_manager("countries");
     }
 
+  let list = JSON.parse(window.localStorage.getItem("countries"));
 
+  if (list) {
+    country_list = list;
+    populate_country_list();
+  } else {
+    network_manager("countries");
+  }
 }
 // Puts the avaialbe countries into the drop-down option list
 function populate_country_list() {
@@ -305,9 +309,13 @@ function set_avg_temps(temp_data) {
         // Adds the tagbox to the wrapper
         average_temps.appendChild(month_tag);
     }
+    month_tag.classList.add("month_tagbox", "tagbox", extreme_class);
 
-    const temp_container = document.querySelector("#temp_container");
+    // Adds the tagbox to the wrapper
+    average_temps.appendChild(month_tag);
+  }
 
+  const temp_container = document.querySelector("#temp_container");
 }
 function set_currency(currency_data) {
     const currencyEl = document.querySelector(".currency_wrapper");
@@ -337,67 +345,99 @@ function set_currency(currency_data) {
     currencyEl.append(currency_name, currency_rate);
 }
 function set_language(language_data) {
+  // Updates the DOM with received language information
 
-    // Updates the DOM with received language information
+  // Creates a variable for the correct DOM element
+  const languageEl = document.querySelector(".language_wrapper");
 
-    // Creates a variable for the correct DOM element
-    const languageEl = document.querySelector(".language_wrapper");
+  // Clears any previous country's languages
+  while (languageEl.firstChild) {
+    languageEl.removeChild(languageEl.firstChild);
+  }
 
-    // Clears any previous country's languages
-    while(languageEl.firstChild) {
-        languageEl.removeChild(languageEl.firstChild);
-    }
-
-    // Updates the DOM with any language information
-    if(language_data.length === 0) {
-        // If there is no language data it will put a message in the DOM
-        const no_data_message = document.createElement("p");
-        no_data_message.textContent = "No Language Data Provided";
-        languageEl.appendChild(no_data_message);
-    } else {
-        // Get each language by iterating through the array of languages
-        language_data.forEach(function(l){
-            const language = create_tagbox("Spoken Language - " + l.language, "Official - " + l.official);
-            languageEl.appendChild(language);
-        });
-    }
+  // Updates the DOM with any language information
+  if (language_data.length === 0) {
+    // If there is no language data it will put a message in the DOM
+    const no_data_message = document.createElement("p");
+    no_data_message.textContent = "No Language Data Provided";
+    languageEl.appendChild(no_data_message);
+  } else {
+    // Get each language by iterating through the array of languages
+    language_data.forEach(function (l) {
+      const language = create_tagbox(
+        "Spoken Language - " + l.language,
+        "Official - " + l.official
+      );
+      languageEl.appendChild(language);
+    });
+  }
 }
 function set_electricity(electricity_data) {
+  // Updates the DOM with received electricity information
 
-    // Updates the DOM with received electricity information
+  // Element from the DOM to place the data
+  const electricity_wrapperEl = document.querySelector(".electricity_wrapper");
 
-    // Element from the DOM to place the data
-    const electricity_wrapperEl = document.querySelector(".electricity_wrapper");
+  // Clears out any previous data
+  while (electricity_wrapperEl.firstChild) {
+    electricity_wrapperEl.removeChild(electricity_wrapperEl.firstChild);
+  }
 
-    // Clears out any previous data
-    while (electricity_wrapperEl.firstChild) {
-        electricity_wrapperEl.removeChild(electricity_wrapperEl.firstChild);
-    }
+  // Gets a tagbox with the voltage data
+  if (electricity_data.voltage) {
+    electricity_wrapperEl.appendChild(
+      create_tagbox(
+        "Voltage",
+        electricity_data.voltage +
+          " volts (" +
+          electricity_data.frequency +
+          "hz)"
+      )
+    );
+  } else {
+    electricity_wrapperEl.innerHTML = "<p>No Electrical Data Provided.</p>";
+    return false;
+  }
 
-    // Gets a tagbox with the voltage data
-    if(electricity_data.voltage) {
-        electricity_wrapperEl.appendChild(create_tagbox("Voltage", electricity_data.voltage + " volts (" + electricity_data.frequency + "hz)"));
+  // If there's no plug data it exit the function
+  if (electricity_data.plugs.length === 0) {
+    return false;
+  }
+
+  // Gets the plugs used and creates a consecutive string or the plug types
+  let plug_text = null;
+
+  //   let imageArray = [];
+  //   electricity_data.plugs.forEach(function (type, index) {
+
+  let imageArray = [];
+  electricity_data.plugs.forEach(function (type, index) {
+    if (type == "N") {
+      imageArray.push(
+        // `./assets/images/electric-plugs/${type.toLowerCase()}.png`
+        `./assets/images/plug-types/${type.toLowerCase()}.svg`
+      );
     } else {
-        electricity_wrapperEl.innerHTML = "<p>No Electrical Data Provided.</p>"
-        return false;
+      imageArray.push(
+        // `./assets/images/electric-plugs/${type.toLowerCase()}.svg`
+        `./assets/images/plug-types/${type.toLowerCase()}.svg`
+      );
+      //   imageArray.push(`./assets/plug-types/${type.toLowerCase()}.svg`);
     }
 
-    // If there's no plug data it exit the function
-    if(electricity_data.plugs.length === 0) {
-        return false;
+    if (index === 0) {
+      plug_text = type;
+    } else {
+      plug_text = plug_text + ", " + type;
     }
+  });
 
-    // Gets the plugs used and creates a consecutive string or the plug types
-    let plug_text = null;
-    electricity_data.plugs.forEach(function(type, index) {
-        if(index === 0) {
-           plug_text = type;
-        } else {
-            plug_text = plug_text + ", " + type;
-        }
-    })
+  //   if (plug_text == A) {
+  //     return "./assets/images/electric-plugs/a.svg";
+  //   }
+  electricity_wrapperEl.appendChild(create_tagbox("Plugs Used", plug_text));
 
-    electricity_wrapperEl.appendChild(create_tagbox("Plugs Used", plug_text));
+  electricity_wrapperEl.appendChild(outletImage(imageArray));
 }
 function set_other_info(brief_data) {
 
@@ -503,10 +543,50 @@ function get_wx_icon(code) {
             wx_icon = "./assets/images/wx-icons/partly-cloudy-day.svg"
             break;
 
-        case (code < 900): // Overcast
-            wx_icon = "./assets/images/wx-icons/overcast-day.svg"
-            break;
+  country_list.forEach((element) => {
+    if (element.name === selection) {
+      inList = element.url;
     }
+  });
+
+  return inList;
+}
+function get_wx_icon(code) {
+  // Returns the respective wx_icon url based on the weather id code and if it's day/night
+
+  let wx_icon = null;
+
+  switch (true) {
+    case code < 300: // Thunderstorm
+      wx_icon = "./assets/images/wx-icons/thunderstorms-day.svg";
+      break;
+    case code < 500: // Drizzle
+      wx_icon = "./assets/images/wx-icons/partly-cloudy-day-drizzle.svg";
+      break;
+    case code < 600: // Rain
+      wx_icon = "./assets/images/wx-icons/partly-cloudy-day-rain.svg";
+      break;
+    case code < 800: // Snow
+      wx_icon = "./assets/images/wx-icons/partly-cloudy-day-snow.svg";
+      break;
+    case code === 800: // Clear
+      wx_icon = "./assets/images/wx-icons/clear-day.svg";
+      break;
+
+    case code === 801: // Few
+    case code === 802: // Scattered
+    case code === 803: // Broken
+      wx_icon = "./assets/images/wx-icons/partly-cloudy-day.svg";
+      break;
+
+    case code < 900: // Overcast
+      wx_icon = "./assets/images/wx-icons/overcast-day.svg";
+      break;
+  }
+
+  // If the code doesn't match with a condition, it will return a no-data icon
+  if (!wx_icon) {
+    return "./assets/images/wx-icons/code-red.svg";
 
     // If the code doesn't match with a condition, it will return a no-data icon
     if(!wx_icon) {
@@ -530,12 +610,38 @@ function create_tagbox(label, value) {
     tag_label.classList.add("tagbox_label");
     tag_value.classList.add("tagbox_value");
 
-    tag_label.innerHTML = label;
-    tag_value.innerHTML = value;
+  tagboxEl.classList.add("tagbox");
+  tag_label.classList.add("tagbox_label");
+  tag_value.classList.add("tagbox_value");
 
-    tagboxEl.append(tag_label, tag_value);
+  tag_label.innerHTML = label;
+  tag_value.innerHTML = value;
 
-    return tagboxEl;
+  tagboxEl.append(tag_label, tag_value);
+
+  return tagboxEl;
+}
+function alert_modal(title, message) {
+    const modal_TitleEl = document.querySelector(".modal-title");
+    const modal_MsgEl = document.querySelector(".modal-msg");
+    modal_TitleEl.innerHTML = "<p>" + title + "</p>";
+    modal_MsgEl.innerHTML = "<p>" + message + "</p>";
+    modalEl.style.display = "block";
+}
+
+function outletImage(urlArray) {
+  const tagboxEl = document.createElement("div");
+  urlArray.forEach(function (url) {
+    const newImage = document.createElement("img");
+    newImage.setAttribute("src", url);
+    tagboxEl.append(newImage);
+    newImage.classList.add("imgsize");
+  });
+
+  //   newImage.classList.add("imgsize");
+  tagboxEl.classList.add("imgbox");
+
+  return tagboxEl;
 }
 function alert_modal(title, message) {
     const modal_TitleEl = document.querySelector(".modal-title");
