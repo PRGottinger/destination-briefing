@@ -9,9 +9,9 @@ We created an app that would gather valueable travel information that is spread 
 A user would simply search by entering the country name and the app would gather and populate desired travel information such as current time, weather patterns, currency, language, electrical information and other valueable travel information giving them a destination briefing.
 
 ## How it Works:
-It gether information from two Server-side APIs(unfinished)
+It gether information from two Server-side APIs as well as location for Google Maps to post the location. Primarly most of the travel information was gathered from the Travel Briefing App then the weather is where we gathered the current weather conditions.  Once the data is gathered we thing used JavaScript to populate it into Bulma class cards.  
 
-Since the country names are stored in Local Storage it lists out all possible countries. Also as the user types in their country it auto eleminates countries by spelling making selection easier.
+Local Storage it lists out all possible countries. Also as the user types in their country it auto eleminates countries by spelling making selection easier.
 
 ## Project Requirements:
 - Intergrating Information from Multiple Server-side APIs:  
