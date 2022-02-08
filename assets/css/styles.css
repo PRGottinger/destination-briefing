@@ -14,6 +14,10 @@
   align-items: flex-start;
 }
 
+header {
+  justify-content: space-between;
+}
+
 /* Start of the input form inside the header */
 #search_country {
   flex: 1;
