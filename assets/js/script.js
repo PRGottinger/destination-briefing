@@ -304,7 +304,6 @@ function set_avg_temps(temp_data) {
         average_temps.appendChild(month_tag);
     }
 }
-
 function set_currency(currency_data) {
     const currencyEl = document.querySelector(".currency_wrapper");
 
@@ -392,40 +391,21 @@ function set_electricity(electricity_data) {
     return false;
   }
 
-  // Gets the plugs used and creates a consecutive string or the plug types
+  // Gets the plugs used and their respective images to be displayed on the page
+
   let plug_text = null;
-
-  //   let imageArray = [];
-  //   electricity_data.plugs.forEach(function (type, index) {
-
-  let imageArray = [];
+  let plug_imgs = [];
+  
+  // Iterates through each of the plugs used and creates a string of the types and creates an array of the plug image urls from the plug data
   electricity_data.plugs.forEach(function (type, index) {
-    if (type == "N") {
-      imageArray.push(
-        // `./assets/images/electric-plugs/${type.toLowerCase()}.png`
-        `./assets/images/plug-types/${type.toLowerCase()}.svg`
-      );
-    } else {
-      imageArray.push(
-        // `./assets/images/electric-plugs/${type.toLowerCase()}.svg`
-        `./assets/images/plug-types/${type.toLowerCase()}.svg`
-      );
-      //   imageArray.push(`./assets/plug-types/${type.toLowerCase()}.svg`);
-    }
-
-    if (index === 0) {
-      plug_text = type;
-    } else {
-      plug_text = plug_text + ", " + type;
-    }
+    if (index === 0) { plug_text = type; } else {plug_text = plug_text + ", " + type; } 
+    plug_imgs.push(`./assets/images/plug-types/${type.toLowerCase()}.svg`);
   });
 
-  //   if (plug_text == A) {
-  //     return "./assets/images/electric-plugs/a.svg";
-  //   }
+  // Adds the taboxes with the names and one for the images to the DOM
   electricity_wrapperEl.appendChild(create_tagbox("Plugs Used", plug_text));
-
-  electricity_wrapperEl.appendChild(outletImage(imageArray));
+  electricity_wrapperEl.appendChild(create_outlet_image_tagbox(plug_imgs));
+  
 }
 function set_other_info(brief_data) {
 
@@ -557,16 +537,16 @@ function create_tagbox(label, value) {
     tag_label.classList.add("tagbox_label");
     tag_value.classList.add("tagbox_value");
 
-  tagboxEl.classList.add("tagbox");
-  tag_label.classList.add("tagbox_label");
-  tag_value.classList.add("tagbox_value");
+    tagboxEl.classList.add("tagbox");
+    tag_label.classList.add("tagbox_label");
+    tag_value.classList.add("tagbox_value");
 
-  tag_label.innerHTML = label;
-  tag_value.innerHTML = value;
+    tag_label.innerHTML = label;
+    tag_value.innerHTML = value;
 
-  tagboxEl.append(tag_label, tag_value);
+    tagboxEl.append(tag_label, tag_value);
 
-  return tagboxEl;
+    return tagboxEl;
 }
 function alert_modal(title, message) {
     const modal_TitleEl = document.querySelector(".modal-title");
@@ -575,8 +555,10 @@ function alert_modal(title, message) {
     modal_MsgEl.innerHTML = "<p>" + message + "</p>";
     modalEl.style.display = "block";
 }
-function outletImage(urlArray) {
+function create_outlet_image_tagbox(urlArray) {
+  
   const tagboxEl = document.createElement("div");
+  
   urlArray.forEach(function (url) {
     const newImage = document.createElement("img");
     newImage.setAttribute("src", url);
@@ -584,7 +566,6 @@ function outletImage(urlArray) {
     newImage.classList.add("imgsize");
   });
 
-  //   newImage.classList.add("imgsize");
   tagboxEl.classList.add("imgbox");
 
   return tagboxEl;
