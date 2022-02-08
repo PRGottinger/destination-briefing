@@ -13,21 +13,37 @@
 </head>
 <body>
 
-  <header class="section is-fluid is-max-desktop level header-bg">
-    <div class="level-left">
-      <div class="level-item">
-        <h1 id="title_wrapper" class="title title_wrapper is-3">Navigation Station</h1>
-      </div>
+  <header id="header-mobile">
+
+    <h1 id="title_wrapper" class="title title_wrapper is-3">Navigation Station</h1>
+
+    <div id="search_country">
+      <!-- Drop down list with the available country names -->
+      <input list="country_list" name="country" id="country_name" placeholder="Search Country">
+      <datalist id="country_list">
+        <!-- Dynamically enters list of countries here -->
+      </datalist>
     </div>
 
-    <div class="level-right">
-      <div class="level-item" id="search_country">
-        <!-- Drop down list with the available country names -->
-        <label for="country_name">Select Country</label>
-        <input list="country_list" name="country" id="country_name">
-        <datalist id="country_list">
-          <!-- Dynamically enters list of countries here -->
-        </datalist>
+  </header>
+
+  <header class="header-bg mb-0" id="content-desktop">
+    <div class="container level header-bg">
+      <div class="level-left">
+        <div class="level-item">
+          <h1 id="title_wrapper" class="title title_wrapper is-3">Navigation Station</h1>
+        </div>
+      </div>
+
+      <div class="level-right">
+        <div class="level-item" id="search_country">
+          <!-- Drop down list with the available country names -->
+          <label for="country_name">Select Country</label>
+          <input list="country_list" name="country" id="country_name">
+          <datalist id="country_list">
+            <!-- Dynamically enters list of countries here -->
+          </datalist>
+        </div>
       </div>
     </div>
 
@@ -42,26 +58,18 @@
 
 
     <!-- Placeholder for the country title once it's selected and data is received -->
-    <div class="has-text-centered">
-      <h1 id="title_text" class="title is-1"></h1>
+    <div class="hero">
+      <div class="hero-body">
+        <h1 id="title_text" class="title is-1 has-text-centered"></h1>
+      </div>
     </div>
 
-    <aside class="tabs is-centered">
-      <ul>
-        <li id="conditions"><a href="">Current Conditions</a></li>
-        <li id="language"><a href="">Language</a></li>
-        <li id="currency" class="is-active"><a href="">Currency</a></li>
-        <li id="advise"><a href="" >Travel Advisories</a></li>
-        <li id="electricity"><a href="">Electricity</a></li>
-      </ul>
-    </aside>
-
     <!-- Current Conditions section -->
-    <h1 class="title">Section</h1>
+    <h1 class="title has-text-centered">Current Conditons</h1>
     <section class="section columns">
 
       <!-- Time card -->
-      <div id="time" class="card column">
+      <div id="time" class="card column m-2">
         <header class="card-header">
           <p class="card-header-title">
             Local Time
@@ -77,8 +85,7 @@
       </div>
 
       <!-- Current weather card -->
-
-      <div id="weather-current" class="card column">
+      <div id="weather-current" class="card column m-2">
         <header class="card-header">
           <p class="card-header-title">
             Current Weather
@@ -97,7 +104,7 @@
       </div>
 
       <!-- Historical weather card -->
-      <div id="weather-historical" class="card column">
+      <div id="weather-historical" class="card column m-2">
         <header class="card-header">
           <p class="card-header-title">
             Average Monthly Temperatures
@@ -118,12 +125,12 @@
     </section>
 
     <!-- Other/Travel Information section -->
-    <h1 class="misc-info">Section</h1>
+    <h1 class="title has-text-centered">Travel Information</h1>
     <section class="section columns">
 
 
       <!-- Language / Currency -->
-      <div id="language_currency" class="card column">
+      <div id="language_currency" class="card column m-2">
         <header class="card-header">
           <p class="card-header-title">
             Currency and Language
@@ -136,34 +143,43 @@
       </div>
 
       <!-- Plug / Electricity card-->
-      <div id="connectivity" class="card column">
+      <div id="connectivity" class="card column m-2">
         <header class="card-header">
           <p class="card-header-title">
             Electricity Info
           </p>
         </header>
-        
+
         <div class="card-content">
           <div class="electricity_wrapper"></div>
         </div>
-      
+
       </div>
 
        <!-- Other Info -->
-       <div id="other_info" class="card column">
+       <div id="other_info" class="card column m-2">
         <header class="card-header">
           <p class="card-header-title">
             Health Info
           </p>
         </header>
-        
+
         <div class="card-content">
           <div class="other_info_wrapper"></div>
         </div>
-      
+
       </div>
 
     </section>
+
+    <!-- Modal Alert Box -->
+    <div class="modal-alert">
+      <div class="modal-title"></div>
+        <div class="modal-content">
+        <div class="modal-msg"></div>
+        <button class="modal-button">Ok</button>
+      </div>
+    </div>
 
   </main>
 

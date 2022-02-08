@@ -1,9 +1,9 @@
 /* Start of Header */
 .header-bg {
-    background-color: #f8f8f8 !important;
-    border: 1px solid darkgrey;
-    font-family: "Roboto";
-    height: 80px;
+  background-color: #f8f8f8 !important;
+  border: 1px solid darkgrey;
+  font-family: "Roboto";
+  height: 80px;
 }
 
 /* For the title text inside the header */

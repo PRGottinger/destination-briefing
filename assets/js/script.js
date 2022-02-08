@@ -643,6 +643,13 @@ function outletImage(urlArray) {
 
   return tagboxEl;
 }
+function alert_modal(title, message) {
+    const modal_TitleEl = document.querySelector(".modal-title");
+    const modal_MsgEl = document.querySelector(".modal-msg");
+    modal_TitleEl.innerHTML = "<p>" + title + "</p>";
+    modal_MsgEl.innerHTML = "<p>" + message + "</p>";
+    modalEl.style.display = "block";
+}
 
 // Event listeners that are initiated on page load
 countryNameEl.addEventListener('change', function(event) {
