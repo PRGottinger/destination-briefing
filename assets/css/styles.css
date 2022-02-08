@@ -1,9 +1,10 @@
 /* Start of Header */
 .header-bg {
-  background-color: #f8f8f8 !important;
-  border: 1px solid darkgrey;
+  background-color: #f3f3f3 !important;
+  border-radius: 5px;
   font-family: "Roboto";
   height: 80px;
+  padding: 15px;
 }
 
 /* For the title text inside the header */
