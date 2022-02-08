@@ -502,7 +502,6 @@ function get_brief_url(selection) {
 
     return inList;
 }
-
 function get_wx_icon(code) {
 
     // Returns the respective wx_icon url based on the weather id code and if it's day/night
@@ -539,56 +538,6 @@ function get_wx_icon(code) {
   });
 
   return inList;
-    }
-}
-function get_wx_icon(code) {
-  // Returns the respective wx_icon url based on the weather id code and if it's day/night
-
-  let wx_icon = null;
-
-  switch (true) {
-    case code < 300: // Thunderstorm
-      wx_icon = "./assets/images/wx-icons/thunderstorms-day.svg";
-      break;
-    case code < 500: // Drizzle
-      wx_icon = "./assets/images/wx-icons/partly-cloudy-day-drizzle.svg";
-      break;
-    case code < 600: // Rain
-      wx_icon = "./assets/images/wx-icons/partly-cloudy-day-rain.svg";
-      break;
-    case code < 800: // Snow
-      wx_icon = "./assets/images/wx-icons/partly-cloudy-day-snow.svg";
-      break;
-    case code === 800: // Clear
-      wx_icon = "./assets/images/wx-icons/clear-day.svg";
-      break;
-
-    case code === 801: // Few
-    case code === 802: // Scattered
-    case code === 803: // Broken
-      wx_icon = "./assets/images/wx-icons/partly-cloudy-day.svg";
-      break;
-
-    case code < 900: // Overcast
-      wx_icon = "./assets/images/wx-icons/overcast-day.svg";
-      break;
-  }
-
-  // If the code doesn't match with a condition, it will return a no-data icon
-  if (!wx_icon) {
-    return "./assets/images/wx-icons/code-red.svg";
-
-    // If the code doesn't match with a condition, it will return a no-data icon
-    if(!wx_icon) {
-        return "./assets/images/wx-icons/code-red.svg";
-
-    // If it's not daytime, then it will replace day with night into the url
-    } else if (!isDayTime) {
-        return wx_icon.replace("day", "night")
-    } else {
-        return wx_icon;
-    }
-
     }
 }
 function create_tagbox(label, value) {
@@ -633,13 +582,7 @@ function outletImage(urlArray) {
 
   return tagboxEl;
 }
-function alert_modal(title, message) {
-    const modal_TitleEl = document.querySelector(".modal-title");
-    const modal_MsgEl = document.querySelector(".modal-msg");
-    modal_TitleEl.innerHTML = "<p>" + title + "</p>";
-    modal_MsgEl.innerHTML = "<p>" + message + "</p>";
-    modalEl.style.display = "block";
-}
+
 // Event listeners that are initiated on page load
 countryNameEl.addEventListener('change', function(event) {
     // Triggers when the user selects a country from the drop-down list
