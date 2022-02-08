@@ -503,11 +503,11 @@ function get_brief_url(selection) {
     return inList;
 }
 function get_wx_icon(code) {
-
+    
     // Returns the respective wx_icon url based on the weather id code and if it's day/night
-
+    
     let wx_icon = null;
-
+    
     switch(true) {
         case (code < 300): // Thunderstorm
             wx_icon = "./assets/images/wx-icons/thunderstorms-day.svg"
@@ -522,23 +522,30 @@ function get_wx_icon(code) {
             wx_icon = "./assets/images/wx-icons/partly-cloudy-day-snow.svg"
             break;
         case (code === 800): // Clear
-            wx_icon = "./assets/images/wx-icons/clear-day.svg"
+            wx_icon = "./assets/images/wx-icons/clear-day.svg"        
             break;
-
+        
         case (code === 801): // Few
         case (code === 802): // Scattered
         case (code === 803): // Broken
             wx_icon = "./assets/images/wx-icons/partly-cloudy-day.svg"
             break;
+
+        case (code < 900): // Overcast
+            wx_icon = "./assets/images/wx-icons/overcast-day.svg"
+            break;
     }
 
-    country_list.forEach((element) => {
-        if (element.name === selection) {
-        inList = element.url;
-        }
-    });
-
-    return inList;
+    // If the code doesn't match with a condition, it will return a no-data icon
+    if(!wx_icon) {
+        return "./assets/images/wx-icons/code-red.svg";
+    
+    // If it's not daytime, then it will replace day with night into the url
+    } else if (!isDayTime) {
+        return wx_icon.replace("day", "night")
+    } else {
+        return wx_icon;
+    }   
 }
 function create_tagbox(label, value) {
 
