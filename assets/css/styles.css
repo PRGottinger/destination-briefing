@@ -6,8 +6,8 @@
 
 /* Start of Header */
 .header-bg {
-    background-color: burlywood !important;
-    height: 100px;
+    background-color: lightgray !important;
+    height: 80px;
     /* width: 100%;
     display: flex;
     flex-wrap: wrap;
