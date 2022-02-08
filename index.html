@@ -13,18 +13,19 @@
 </head>
 <body>
 
-  <header class="container header-bg">
+  <header class="section container header-bg py-5">
+    <div class="columns">
+      <div class="column is-half has-text-centered-mobile">
+        <h1 class="title is-3">Destination Briefing</h1>
+      </div>
 
-    <div>
-      <h1 class="title is-3">Destination Briefing</h1>
-    </div>
-
-    <div id="search_country">
-      <!-- Drop down list with the available country names -->
-      <input list="country_list" name="country" id="country_name" placeholder="Search Country">
-      <datalist id="country_list">
-        <!-- Dynamically enters list of countries here -->
-      </datalist>
+      <div id="search_country" class="column is-half">
+        <!-- Drop down list with the available country names -->
+        <input list="country_list" name="country" id="country_name" placeholder="Search Country" class="is-centered">
+        <datalist id="country_list">
+          <!-- Dynamically enters list of countries here -->
+        </datalist>
+      </div>
     </div>
   </header>
 
