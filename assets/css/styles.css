@@ -1,7 +1,9 @@
 /* Start of Header */
 .header-bg {
-  background-color: burlywood !important;
-  height: 100px;
+  background-color: #f8f8f8 !important;
+  border: 1px solid darkgrey;
+  font-family: "Roboto";
+  height: 80px;
 }
 
 /* For the title text inside the header */
@@ -44,29 +46,6 @@ header {
 
   #search-country {
     flex-grow: 2;
-    float: left;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    margin-right: 0;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  #content-desktop {
-    display: none;
-  }
-
-  #header-mobile {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin: 16px 0 20px;
-  }
-
-  #search-country {
     float: left;
     display: flex;
     flex-direction: row;
@@ -168,6 +147,7 @@ main {
 }
 
 .currency_wrapper {
+  /* display: flex; */
   flex-wrap: wrap;
   justify-content: flex-start;
   border-bottom: black 2px solid;
@@ -175,6 +155,7 @@ main {
 }
 
 .language_wrapper {
+  /* display: flex; */
   flex-wrap: wrap;
   justify-content: flex-start;
 }
@@ -209,7 +190,6 @@ main {
   width: 128px;
   height: 128px;
 }
-
 
 /* Used to change the font size of am/pm */
 .subscript {

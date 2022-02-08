@@ -206,6 +206,15 @@ function get_countries() {
     } else {
         network_manager("countries");
     }
+
+  let list = JSON.parse(window.localStorage.getItem("countries"));
+
+  if (list) {
+    country_list = list;
+    populate_country_list();
+  } else {
+    network_manager("countries");
+  }
 }
 // Puts the avaialbe countries into the drop-down option list
 function populate_country_list() {
@@ -304,6 +313,9 @@ function set_avg_temps(temp_data) {
 
     // Adds the tagbox to the wrapper
     average_temps.appendChild(month_tag);
+  }
+
+  const temp_container = document.querySelector("#temp_container");
 }
 function set_currency(currency_data) {
     const currencyEl = document.querySelector(".currency_wrapper");
@@ -502,7 +514,6 @@ function get_brief_url(selection) {
 
     return inList;
 }
-
 function get_wx_icon(code) {
 
     // Returns the respective wx_icon url based on the weather id code and if it's day/night
@@ -539,7 +550,6 @@ function get_wx_icon(code) {
   });
 
   return inList;
-    }
 }
 function get_wx_icon(code) {
   // Returns the respective wx_icon url based on the weather id code and if it's day/night
@@ -589,7 +599,6 @@ function get_wx_icon(code) {
         return wx_icon;
     }
 
-    }
 }
 function create_tagbox(label, value) {
 
@@ -619,6 +628,7 @@ function alert_modal(title, message) {
     modal_MsgEl.innerHTML = "<p>" + message + "</p>";
     modalEl.style.display = "block";
 }
+
 function outletImage(urlArray) {
   const tagboxEl = document.createElement("div");
   urlArray.forEach(function (url) {
@@ -633,13 +643,7 @@ function outletImage(urlArray) {
 
   return tagboxEl;
 }
-function alert_modal(title, message) {
-    const modal_TitleEl = document.querySelector(".modal-title");
-    const modal_MsgEl = document.querySelector(".modal-msg");
-    modal_TitleEl.innerHTML = "<p>" + title + "</p>";
-    modal_MsgEl.innerHTML = "<p>" + message + "</p>";
-    modalEl.style.display = "block";
-}
+
 // Event listeners that are initiated on page load
 countryNameEl.addEventListener('change', function(event) {
     // Triggers when the user selects a country from the drop-down list
@@ -659,7 +663,6 @@ countryNameEl.addEventListener('change', function(event) {
         countryNameEl.focus();
     }
 });
-
 modalEl.addEventListener('click', function(event) {
     modalEl.style.display = "none";
 });
