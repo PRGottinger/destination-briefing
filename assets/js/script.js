@@ -8,33 +8,36 @@ const countryNameEl = document.getElementById("country_name");
 const countryListEl = document.getElementById("country_list");
 const modalEl = document.querySelector(".modal-alert");
 
-// Handles asynchronous fetch requests and then calls the respective method to handle the data once its received
+// Handles asynchronous fetch requests and then calls the respective method to handle the data once its received 
 function network_manager(request) {
-
+    
     const info_request = request.split("?")[0].trim();
     const parameter = request.split("?")[1];
-
+    
     let apiUrl = null;
     let base = null;
 
     // Sets the apiUrl depending on which data is being fetched
     switch(info_request){
-
+      
         case "countries":
             // This address is for an array of all the available countries, their full names, country codes amd briefing URL from TravelBriefing's API
-
+            
             apiUrl = "https://travelbriefing.org/countries?format=json";
             break;
 
         case "country-briefing":
             // This address is for an object of the breifing data from TravelBriefing's API for the country that was passed in with the request
-
+            
             apiUrl = parameter + "?format=json";
             break;
-          case "weather":
-            weather_received(data);
-            break;
 
+        case "weather":
+            // This address is for an object to retrieve the current weather for the lat/long
+            // Example format: https://fcc-weather-api.glitch.me/api/current?lat=25.9&lon=50.6
+            apiUrl = "https://fcc-weather-api.glitch.me/api/current?" + parameter;
+            break;
+            
         default:
             // Alerts the user if an improper request parameter was passed in and the returns false to terminate the function
             alert_modal("Netowrk Error!", "An invalid request was sent to the network manager.. Please try again.");
@@ -69,7 +72,7 @@ function network_manager(request) {
         else {
             // If the response from the fetch is anything but OK.
             alert_modal("Netowrk Error!", "An bad response was received back from the network request. Please try again.\n\nThe network response status code: " + response.status);
-        }
+        } 
     });
 }
 
@@ -104,7 +107,7 @@ function brief_received(brief_data) {
     // Sets up map with the lat/long and zoom from the briefing object
     const lat = parseFloat(brief_data.maps.lat);
     const lng = parseFloat(brief_data.maps.long);
-    const zoom = parseInt(brief_data.maps.zoom);
+    const zoom = !brief_data.maps.zoom ? 4 : parseInt(brief_data.maps.zoom);
 
     // Converts the quadrant of the lat/long from +/- to the respective compass heading to be used with the maps' required url
     let map_lat = lat < 0 ? "S" + Math.abs(lat).toString() : "N" + lat.toString();
@@ -130,12 +133,15 @@ function weather_received(weather_data) {
     if (weather_data.name === "Shuzenji" && weather_attempts < 5) {
         weather_attempts++;
         network_manager(current_weather_request);
+        return false;
+    } else if (weather_data.name === "Shuzenji") {
+        alert_modal("Current WX Error", "There seems to be an issue with the current weather information. Please try again to get the lastest current conditions.");
     }
+
+    console.log(weather_attempts, weather_data);
 
     // Resets the attempt counter
     weather_attempts = 0;
-
-    console.log(weather_data);
 
     // Creates DOM elements to put the current weather data into
     const wx_iconEl = document.querySelector(".wx_icon");
@@ -228,8 +234,11 @@ function set_world_time(timezone) {
     const country_timezoneEl = document.querySelector(".country_timezone");
 
     if(!timezone) {
-        // Error
-        country_timeEl.innerHTML = "Data Not Available";
+        // If not timezone data is received it will clear out the current time and display that there's no data
+        alert_modal("Data Error", "No timezone information was received from the network, please try again later.");
+        country_dateEl.innerHTML = "";
+        country_timeEl.innerHTML = "<p>Data Not Available</p>";
+        country_timezoneEl.innerHTML = "";
         return false;
     }
 
@@ -281,6 +290,11 @@ function set_avg_temps(temp_data) {
         average_temps.removeChild(average_temps.firstChild);
     }
 
+    // Ensures that the data is valid from the received data, if not it does not display any information
+    if(temp_data.weather[months[0]].tMax == 100 && temp_data.weather[months[0]].tMin == -100 ) {
+        return false;        
+    }
+
     // Creates the DOM elements for each month in the array and places them in the DOM
     for(let i=0; i < 12; i++) {
 
@@ -300,10 +314,6 @@ function set_avg_temps(temp_data) {
         // Adds the tagbox to the wrapper
         average_temps.appendChild(month_tag);
     }
-    month_tag.classList.add("month_tagbox", "tagbox", extreme_class);
-
-    // Adds the tagbox to the wrapper
-    average_temps.appendChild(month_tag);
 }
 function set_currency(currency_data) {
     const currencyEl = document.querySelector(".currency_wrapper");
@@ -392,40 +402,21 @@ function set_electricity(electricity_data) {
     return false;
   }
 
-  // Gets the plugs used and creates a consecutive string or the plug types
+  // Gets the plugs used and their respective images to be displayed on the page
+
   let plug_text = null;
-
-  //   let imageArray = [];
-  //   electricity_data.plugs.forEach(function (type, index) {
-
-  let imageArray = [];
+  let plug_imgs = [];
+  
+  // Iterates through each of the plugs used and creates a string of the types and creates an array of the plug image urls from the plug data
   electricity_data.plugs.forEach(function (type, index) {
-    if (type == "N") {
-      imageArray.push(
-        // `./assets/images/electric-plugs/${type.toLowerCase()}.png`
-        `./assets/images/plug-types/${type.toLowerCase()}.svg`
-      );
-    } else {
-      imageArray.push(
-        // `./assets/images/electric-plugs/${type.toLowerCase()}.svg`
-        `./assets/images/plug-types/${type.toLowerCase()}.svg`
-      );
-      //   imageArray.push(`./assets/plug-types/${type.toLowerCase()}.svg`);
-    }
-
-    if (index === 0) {
-      plug_text = type;
-    } else {
-      plug_text = plug_text + ", " + type;
-    }
+    if (index === 0) { plug_text = type; } else {plug_text = plug_text + ", " + type; } 
+    plug_imgs.push(`./assets/images/plug-types/${type.toLowerCase()}.svg`);
   });
 
-  //   if (plug_text == A) {
-  //     return "./assets/images/electric-plugs/a.svg";
-  //   }
+  // Adds the taboxes with the names and one for the images to the DOM
   electricity_wrapperEl.appendChild(create_tagbox("Plugs Used", plug_text));
-
-  electricity_wrapperEl.appendChild(outletImage(imageArray));
+  electricity_wrapperEl.appendChild(create_outlet_image_tagbox(plug_imgs));
+  
 }
 function set_other_info(brief_data) {
 
@@ -502,13 +493,12 @@ function get_brief_url(selection) {
 
     return inList;
 }
-
 function get_wx_icon(code) {
-
+    
     // Returns the respective wx_icon url based on the weather id code and if it's day/night
-
+    
     let wx_icon = null;
-
+    
     switch(true) {
         case (code < 300): // Thunderstorm
             wx_icon = "./assets/images/wx-icons/thunderstorms-day.svg"
@@ -523,73 +513,30 @@ function get_wx_icon(code) {
             wx_icon = "./assets/images/wx-icons/partly-cloudy-day-snow.svg"
             break;
         case (code === 800): // Clear
-            wx_icon = "./assets/images/wx-icons/clear-day.svg"
+            wx_icon = "./assets/images/wx-icons/clear-day.svg"        
             break;
-
+        
         case (code === 801): // Few
         case (code === 802): // Scattered
         case (code === 803): // Broken
             wx_icon = "./assets/images/wx-icons/partly-cloudy-day.svg"
             break;
 
-  country_list.forEach((element) => {
-    if (element.name === selection) {
-      inList = element.url;
+        case (code < 900): // Overcast
+            wx_icon = "./assets/images/wx-icons/overcast-day.svg"
+            break;
     }
-  });
-
-  return inList;
-    }
-}
-function get_wx_icon(code) {
-  // Returns the respective wx_icon url based on the weather id code and if it's day/night
-
-  let wx_icon = null;
-
-  switch (true) {
-    case code < 300: // Thunderstorm
-      wx_icon = "./assets/images/wx-icons/thunderstorms-day.svg";
-      break;
-    case code < 500: // Drizzle
-      wx_icon = "./assets/images/wx-icons/partly-cloudy-day-drizzle.svg";
-      break;
-    case code < 600: // Rain
-      wx_icon = "./assets/images/wx-icons/partly-cloudy-day-rain.svg";
-      break;
-    case code < 800: // Snow
-      wx_icon = "./assets/images/wx-icons/partly-cloudy-day-snow.svg";
-      break;
-    case code === 800: // Clear
-      wx_icon = "./assets/images/wx-icons/clear-day.svg";
-      break;
-
-    case code === 801: // Few
-    case code === 802: // Scattered
-    case code === 803: // Broken
-      wx_icon = "./assets/images/wx-icons/partly-cloudy-day.svg";
-      break;
-
-    case code < 900: // Overcast
-      wx_icon = "./assets/images/wx-icons/overcast-day.svg";
-      break;
-  }
-
-  // If the code doesn't match with a condition, it will return a no-data icon
-  if (!wx_icon) {
-    return "./assets/images/wx-icons/code-red.svg";
 
     // If the code doesn't match with a condition, it will return a no-data icon
     if(!wx_icon) {
         return "./assets/images/wx-icons/code-red.svg";
-
+    
     // If it's not daytime, then it will replace day with night into the url
     } else if (!isDayTime) {
         return wx_icon.replace("day", "night")
     } else {
         return wx_icon;
-    }
-
-    }
+    }   
 }
 function create_tagbox(label, value) {
 
@@ -601,16 +548,16 @@ function create_tagbox(label, value) {
     tag_label.classList.add("tagbox_label");
     tag_value.classList.add("tagbox_value");
 
-  tagboxEl.classList.add("tagbox");
-  tag_label.classList.add("tagbox_label");
-  tag_value.classList.add("tagbox_value");
+    tagboxEl.classList.add("tagbox");
+    tag_label.classList.add("tagbox_label");
+    tag_value.classList.add("tagbox_value");
 
-  tag_label.innerHTML = label;
-  tag_value.innerHTML = value;
+    tag_label.innerHTML = label;
+    tag_value.innerHTML = value;
 
-  tagboxEl.append(tag_label, tag_value);
+    tagboxEl.append(tag_label, tag_value);
 
-  return tagboxEl;
+    return tagboxEl;
 }
 function alert_modal(title, message) {
     const modal_TitleEl = document.querySelector(".modal-title");
@@ -619,8 +566,10 @@ function alert_modal(title, message) {
     modal_MsgEl.innerHTML = "<p>" + message + "</p>";
     modalEl.style.display = "block";
 }
-function outletImage(urlArray) {
+function create_outlet_image_tagbox(urlArray) {
+  
   const tagboxEl = document.createElement("div");
+  
   urlArray.forEach(function (url) {
     const newImage = document.createElement("img");
     newImage.setAttribute("src", url);
@@ -628,18 +577,11 @@ function outletImage(urlArray) {
     newImage.classList.add("imgsize");
   });
 
-  //   newImage.classList.add("imgsize");
   tagboxEl.classList.add("imgbox");
 
   return tagboxEl;
 }
-function alert_modal(title, message) {
-    const modal_TitleEl = document.querySelector(".modal-title");
-    const modal_MsgEl = document.querySelector(".modal-msg");
-    modal_TitleEl.innerHTML = "<p>" + title + "</p>";
-    modal_MsgEl.innerHTML = "<p>" + message + "</p>";
-    modalEl.style.display = "block";
-}
+
 // Event listeners that are initiated on page load
 countryNameEl.addEventListener('change', function(event) {
     // Triggers when the user selects a country from the drop-down list
