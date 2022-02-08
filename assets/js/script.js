@@ -8,27 +8,27 @@ const countryNameEl = document.getElementById("country_name");
 const countryListEl = document.getElementById("country_list");
 const modalEl = document.querySelector(".modal-alert");
 
-// Handles asynchronous fetch requests and then calls the respective method to handle the data once its received 
+// Handles asynchronous fetch requests and then calls the respective method to handle the data once its received
 function network_manager(request) {
-    
+
     const info_request = request.split("?")[0].trim();
     const parameter = request.split("?")[1];
-    
+
     let apiUrl = null;
     let base = null;
 
     // Sets the apiUrl depending on which data is being fetched
     switch(info_request){
-      
+
         case "countries":
             // This address is for an array of all the available countries, their full names, country codes amd briefing URL from TravelBriefing's API
-            
+
             apiUrl = "https://travelbriefing.org/countries?format=json";
             break;
 
         case "country-briefing":
             // This address is for an object of the breifing data from TravelBriefing's API for the country that was passed in with the request
-            
+
             apiUrl = parameter + "?format=json";
             break;
 
@@ -37,7 +37,7 @@ function network_manager(request) {
             // Example format: https://fcc-weather-api.glitch.me/api/current?lat=25.9&lon=50.6
             apiUrl = "https://fcc-weather-api.glitch.me/api/current?" + parameter;
             break;
-            
+
         default:
             // Alerts the user if an improper request parameter was passed in and the returns false to terminate the function
             alert_modal("Netowrk Error!", "An invalid request was sent to the network manager.. Please try again.");
@@ -72,15 +72,15 @@ function network_manager(request) {
         else {
             // If the response from the fetch is anything but OK.
             alert_modal("Netowrk Error!", "An bad response was received back from the network request. Please try again.\n\nThe network response status code: " + response.status);
-        } 
+        }
     });
 }
 
 // Handles the returned data from the api calls
 function countries_received(country_data) {
-   
-    // When the data is recieved from the network call it saves it in the global variable and saves it to local storage for later use, the populates the drop-down
-   
+
+    // When the data is received from the network call it saves it in the global variable and saves it to local storage for later use, the populates the drop-down
+
     country_list = country_data;
     window.localStorage.setItem("countries", JSON.stringify(country_data));
     populate_country_list();
@@ -93,8 +93,8 @@ function brief_received(brief_data) {
 
     // Clears the timer variable in the event there is another timer running
     clearInterval(world_time);
-    
-    // Calls the function set the time based on the received country timezone    
+
+    // Calls the function set the time based on the received country timezone
     set_world_time(brief_data.timezone.name);
 
     // Gets the DOM elements to be updated
@@ -110,16 +110,16 @@ function brief_received(brief_data) {
     const zoom = parseInt(brief_data.maps.zoom);
 
     // Converts the quadrant of the lat/long from +/- to the respective compass heading to be used with the maps' required url
-    let map_lat = lat < 0 ? "S" + Math.abs(lat).toString() : "N" + lat.toString(); 
+    let map_lat = lat < 0 ? "S" + Math.abs(lat).toString() : "N" + lat.toString();
     let map_lng = lng < 0 ? "W" + Math.abs(lng).toString() : "E" + lng.toString();
-   
+
     // Changes the map's source URL to show the respective country
     mapEl.src = "https://maps.google.com/maps?q="+ map_lat + map_lng + "&t=&z=" + zoom + "&ie=UTF8&iwloc=&output=embed";
 
     // Takes the lat/long from the country brief data received to get the the current weather information in the event it needs to be called again
     current_weather_request = "weather?lat=" + parseInt(lat) + "&lon=" + parseInt(lng);
 
-    // Calls the other methods to display current conditions and average temps 
+    // Calls the other methods to display current conditions and average temps
     network_manager(current_weather_request);
     set_avg_temps(brief_data);
     set_currency(brief_data.currency);
@@ -151,7 +151,7 @@ function weather_received(weather_data) {
     // Puts the icon & temp into the DOM
     wx_iconEl.innerHTML = "<img src=" + wx_icon + ">";
     current_tempEl.innerHTML = format_temp(weather_data.main.temp);
-    
+
     // Removes all child elements in the currents_wrapper div
     while(currents_wrapperEl.firstChild) {
         currents_wrapperEl.removeChild(currents_wrapperEl.firstChild);
@@ -162,7 +162,7 @@ function weather_received(weather_data) {
 
         let tag_label = null;
         let tag_value = null;
-        
+
         switch(i) {
             case 0:
                 tag_label = "Conditions";
@@ -188,7 +188,7 @@ function weather_received(weather_data) {
                tag_label = "Humidity";
                tag_value = weather_data.main.humidity + "%";
                break;
-               
+
                // More data can be entered here if desired
         }
 
@@ -207,14 +207,14 @@ function get_countries() {
         country_list = list;
         populate_country_list();
     } else {
-        network_manager("countries");        
+        network_manager("countries");
     }
 
 
 }
 // Puts the avaialbe countries into the drop-down option list
-function populate_country_list() {    
-    
+function populate_country_list() {
+
     // Dynamically adds an option element with each country's name to the drop down list so the country can be selected
     for(let i=0; i < country_list.length; i++) {
         const optionEl = document.createElement("option");
@@ -225,7 +225,7 @@ function populate_country_list() {
 
 // Sets the DOM elements with received data
 function set_world_time(timezone) {
- 
+
     // Gets the current date/time in the selected country's timezone
 
     const country_dateEl = document.querySelector(".country_date");
@@ -241,7 +241,7 @@ function set_world_time(timezone) {
     // Gets the current hour in 24-hour format to determin if it's daytime or not
     const hour = moment().tz(timezone).format("H");
     isDayTime = hour < 18 && hour > 6 ? true : false;
-   
+
     // Calculates the difference between assumed (guessed) user's timezone and selected country's
     const delta = moment.tz.zone(moment.tz.guess()).utcOffset(Date.now())/60 - moment.tz.zone(timezone).utcOffset(Date.now())/60;
 
@@ -257,7 +257,7 @@ function set_world_time(timezone) {
     } else {
         time_diff = "0 hours"
     }
- 
+
     // Sets the timer to fire every second so the time continuously updates while the page is displayed
     world_time = setInterval(function() {
 
@@ -272,7 +272,7 @@ function set_world_time(timezone) {
     },  1000)
 }
 function set_avg_temps(temp_data) {
-    
+
     // Creates the DOM elements and formats the data to display the reported average temps from the selected city
 
     // Used an array of months instead of having a long switch statement
@@ -301,7 +301,7 @@ function set_avg_temps(temp_data) {
             extreme_class = "is-nice"
         }
         month_tag.classList.add("month_tagbox", "tagbox", extreme_class);
-        
+
         // Adds the tagbox to the wrapper
         average_temps.appendChild(month_tag);
     }
@@ -311,7 +311,7 @@ function set_avg_temps(temp_data) {
 }
 function set_currency(currency_data) {
     const currencyEl = document.querySelector(".currency_wrapper");
-    
+
     if(!currency_data.code) {
         // Error
         currencyEl.innerHTML = "Data Not Available";
@@ -368,12 +368,12 @@ function set_electricity(electricity_data) {
 
     // Element from the DOM to place the data
     const electricity_wrapperEl = document.querySelector(".electricity_wrapper");
-    
+
     // Clears out any previous data
     while (electricity_wrapperEl.firstChild) {
         electricity_wrapperEl.removeChild(electricity_wrapperEl.firstChild);
     }
-    
+
     // Gets a tagbox with the voltage data
     if(electricity_data.voltage) {
         electricity_wrapperEl.appendChild(create_tagbox("Voltage", electricity_data.voltage + " volts (" + electricity_data.frequency + "hz)"));
@@ -386,10 +386,10 @@ function set_electricity(electricity_data) {
     if(electricity_data.plugs.length === 0) {
         return false;
     }
-    
+
     // Gets the plugs used and creates a consecutive string or the plug types
     let plug_text = null;
-    electricity_data.plugs.forEach(function(type, index) {    
+    electricity_data.plugs.forEach(function(type, index) {
         if(index === 0) {
            plug_text = type;
         } else {
@@ -400,7 +400,7 @@ function set_electricity(electricity_data) {
     electricity_wrapperEl.appendChild(create_tagbox("Plugs Used", plug_text));
 }
 function set_other_info(brief_data) {
-    
+
     // Updates the DOM with received additional information
 
     const other_info_wrapperEl = document.querySelector(".other_info_wrapper");
@@ -418,21 +418,21 @@ function set_other_info(brief_data) {
     if(brief_data.vaccinations.length > 0) {
         brief_data.vaccinations.forEach(function(v) {
             other_info_wrapperEl.appendChild(create_tagbox("Vaccination - " + v.name,v.message));
-        });  
+        });
     }
 }
 
 // Misc functions
 function format_wind(degrees, speed) {
-    
+
     // Formats the wind to be be NE 5mph instead of using the the decimal speed and degrees (e.g. speed: 5.11343 and degrees: 64.333)
 
     let direction = null;
-    
+
     // Rounds the speed to the nearest int
     let mph = Math.round(speed)
-    
-    // Sets the compass direction based the reported degreess
+
+    // Sets the compass direction based the reported degrees
     if(degrees >= 25 && degrees < 65) {
         direction = "NE";
     } else if(degrees >= 65 && degrees < 115) {
@@ -451,22 +451,22 @@ function format_wind(degrees, speed) {
         direction = "N";
     }
 
-    return direction + " " + mph + "mph"; 
+    return direction + " " + mph + "mph";
 }
 function format_temp(celsius) {
     // Takes the celsius temp converts to Fahrenheit and returns a string with a formatted output i.e. 15C (59F)
-    
+
     const cel_format = Math.round(celsius) + "\u2103";
     const far_format = " (" + parseInt(Math.round(celsius) * 9/5 + 32) + "\u2109)";
     return cel_format + far_format;
 }
 function get_brief_url(selection) {
-    
+
     // returns the url of the select country, if there is no URL it will return a null
-    
+
     let inList = null;
-    
-    country_list.forEach(element => {    
+
+    country_list.forEach(element => {
         if(element.name === selection) {
             inList = element.url;
         }
@@ -475,11 +475,11 @@ function get_brief_url(selection) {
     return inList;
 }
 function get_wx_icon(code) {
-    
+
     // Returns the respective wx_icon url based on the weather id code and if it's day/night
-    
+
     let wx_icon = null;
-    
+
     switch(true) {
         case (code < 300): // Thunderstorm
             wx_icon = "./assets/images/wx-icons/thunderstorms-day.svg"
@@ -494,9 +494,9 @@ function get_wx_icon(code) {
             wx_icon = "./assets/images/wx-icons/partly-cloudy-day-snow.svg"
             break;
         case (code === 800): // Clear
-            wx_icon = "./assets/images/wx-icons/clear-day.svg"        
+            wx_icon = "./assets/images/wx-icons/clear-day.svg"
             break;
-        
+
         case (code === 801): // Few
         case (code === 802): // Scattered
         case (code === 803): // Broken
@@ -511,21 +511,21 @@ function get_wx_icon(code) {
     // If the code doesn't match with a condition, it will return a no-data icon
     if(!wx_icon) {
         return "./assets/images/wx-icons/code-red.svg";
-    
+
     // If it's not daytime, then it will replace day with night into the url
     } else if (!isDayTime) {
         return wx_icon.replace("day", "night")
     } else {
         return wx_icon;
     }
-    
+
 }
 function create_tagbox(label, value) {
-    
+
     const tagboxEl = document.createElement("div");
     const tag_label = document.createElement("p");
     const tag_value = document.createElement("p");
-    
+
     tagboxEl.classList.add("tagbox")
     tag_label.classList.add("tagbox_label");
     tag_value.classList.add("tagbox_value");
@@ -548,18 +548,18 @@ function alert_modal(title, message) {
 // Event listeners that are initiated on page load
 countryNameEl.addEventListener('change', function(event) {
     // Triggers when the user selects a country from the drop-down list
-    
+
     // Gets the url of the briefing for the selected country
     const brief_url = get_brief_url(event.target.value);
 
     // Makes sure there is a url and sends the request to the network manager
-    if(brief_url) { 
+    if(brief_url) {
         clearInterval(set_world_time);
         network_manager("country-briefing?" + brief_url);
         countryNameEl.value = "";
     } else {
 
-        //Need to remove alert and add modal 
+        //Need to remove alert and add modal
         alert("No matching country has been selected! Please select a copy on the list");
         countryNameEl.focus();
     }
@@ -567,7 +567,6 @@ countryNameEl.addEventListener('change', function(event) {
 modalEl.addEventListener('click', function(event) {
     modalEl.style.display = "none";
 });
-   
+
 // Loads the countries into the drop down on page load
 get_countries();
-
