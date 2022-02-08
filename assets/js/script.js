@@ -8,33 +8,36 @@ const countryNameEl = document.getElementById("country_name");
 const countryListEl = document.getElementById("country_list");
 const modalEl = document.querySelector(".modal-alert");
 
-// Handles asynchronous fetch requests and then calls the respective method to handle the data once its received
+// Handles asynchronous fetch requests and then calls the respective method to handle the data once its received 
 function network_manager(request) {
-
+    
     const info_request = request.split("?")[0].trim();
     const parameter = request.split("?")[1];
-
+    
     let apiUrl = null;
     let base = null;
 
     // Sets the apiUrl depending on which data is being fetched
     switch(info_request){
-
+      
         case "countries":
             // This address is for an array of all the available countries, their full names, country codes amd briefing URL from TravelBriefing's API
-
+            
             apiUrl = "https://travelbriefing.org/countries?format=json";
             break;
 
         case "country-briefing":
             // This address is for an object of the breifing data from TravelBriefing's API for the country that was passed in with the request
-
+            
             apiUrl = parameter + "?format=json";
             break;
-          case "weather":
-            weather_received(data);
-            break;
 
+        case "weather":
+            // This address is for an object to retrieve the current weather for the lat/long
+            // Example format: https://fcc-weather-api.glitch.me/api/current?lat=25.9&lon=50.6
+            apiUrl = "https://fcc-weather-api.glitch.me/api/current?" + parameter;
+            break;
+            
         default:
             // Alerts the user if an improper request parameter was passed in and the returns false to terminate the function
             alert_modal("Netowrk Error!", "An invalid request was sent to the network manager.. Please try again.");
@@ -69,7 +72,7 @@ function network_manager(request) {
         else {
             // If the response from the fetch is anything but OK.
             alert_modal("Netowrk Error!", "An bad response was received back from the network request. Please try again.\n\nThe network response status code: " + response.status);
-        }
+        } 
     });
 }
 
@@ -300,11 +303,8 @@ function set_avg_temps(temp_data) {
         // Adds the tagbox to the wrapper
         average_temps.appendChild(month_tag);
     }
-    month_tag.classList.add("month_tagbox", "tagbox", extreme_class);
-
-    // Adds the tagbox to the wrapper
-    average_temps.appendChild(month_tag);
 }
+
 function set_currency(currency_data) {
     const currencyEl = document.querySelector(".currency_wrapper");
 
@@ -530,15 +530,15 @@ function get_wx_icon(code) {
         case (code === 803): // Broken
             wx_icon = "./assets/images/wx-icons/partly-cloudy-day.svg"
             break;
-
-  country_list.forEach((element) => {
-    if (element.name === selection) {
-      inList = element.url;
     }
-  });
 
-  return inList;
-    }
+    country_list.forEach((element) => {
+        if (element.name === selection) {
+        inList = element.url;
+        }
+    });
+
+    return inList;
 }
 function create_tagbox(label, value) {
 
