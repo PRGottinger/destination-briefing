@@ -6,7 +6,8 @@
 
 /* Start of Header */
 .header-bg {
-    background-color: lightgray !important;
+    background-color: #f5f5f5 !important;
+    border: 1px solid darkgrey;
     height: 80px;
     /* width: 100%;
     display: flex;
