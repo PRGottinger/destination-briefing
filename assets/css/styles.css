@@ -7,10 +7,6 @@
 }
 
 /* For the title text inside the header */
-#title_wrapper {
-  margin-left: 25px;
-  flex: 1;
-}
 
 .time_container {
   flex: 1;
@@ -19,12 +15,13 @@
   align-items: flex-start;
 }
 
-header div h1 {
-  text-align: left;
-}
-
 header {
-  padding-bottom: -25px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px !important;
+  margin-bottom: 20px !important;
 }
 
 /* Start of the input form inside the header */
@@ -33,7 +30,29 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-right: 50px;
+  max-width: 50%;
+}
+
+@media screen and (max-width: 768px) {
+
+  header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 16px;
+    margin-bottom: 20px;
+  }
+
+  #search-country {
+    flex-grow: 2;
+    float: left;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-right: 0;
+  }
 }
 
 #country_name {
