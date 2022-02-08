@@ -46,15 +46,27 @@ This project was created by:
 - Daniel Putman
 
 ## Resources:
+Google Maps:
+<a href="https://mapsplatform.google.com/maps-products/#dynamic-maps">Google Maps </a>
+
 APIs Used:  
 <a href="https://travelbriefing.org/api">Travel Briefing API</a>  
-<a href="https://fcc-weather-api.glitch.me/"> FCC-Weather-API</a>
+<a href="https://fcc-weather-api.glitch.me/"> FCC-Weather-API</a> 
 
-CSS Framework:  
-<a href="https://bulma.io/"> Bulma Framework
+CSS Framework:</br>
+<a href="https://bulma.io/"> Bulma Framework</a>
 
-Project Repo:  
+Project Repo:</br>
 <a href="https://github.com/pjlawler/destination-briefing">Destination Briefing Repo</a>
+
+Time Keeping Program:  
+<a href="https://momentjs.com/">Moment JS</a>
+
+Annitmated WX Icons:</br>
+<a href="https://github.com/basmilius/weather-icons"> Icons Repo Link </a> -Copyright (c) 2020-2022 Bas Millius <a href="https://github.com/basmilius/weather-icons/blob/dev/LICENSE">See this Link for License Info</a>
+
+Plug Type Icons:
+<a href="https://www.shutterstock.com/image-illustration/electric-outlet-illustration-on-white-background-524251816">Shutterstock.com</a>
 
 ## Images/Development:
 
