@@ -129,6 +129,16 @@ function brief_received(brief_data) {
 }
 function weather_received(weather_data) {
 
+    // Creates variables of the DOM elements to put the current weather data into
+    const wx_iconEl = document.querySelector(".wx_icon");
+    const current_tempEl = document.querySelector(".current_temp");
+    const currents_wrapperEl = document.querySelector(".currents_wrapper");
+    
+    // Removes all child elements in the currents_wrapper div
+     while(currents_wrapperEl.firstChild) {
+        currents_wrapperEl.removeChild(currents_wrapperEl.firstChild);
+    }
+
     // If weather is the "default" wx, re-requests destination's weather
     if (weather_data.name === "Shuzenji" && weather_attempts < 5) {
         weather_attempts++;
@@ -136,17 +146,15 @@ function weather_received(weather_data) {
         return false;
     } else if (weather_data.name === "Shuzenji") {
         alert_modal("Current WX Error", "There seems to be an issue with the current weather information. Please try again to get the lastest current conditions.");
+        wx_iconEl.innerHTML = "<img src='./assets/images/wx-icons/not-available.svg'>";
+        weather_attempts = 0;
+        return false;
     }
 
     console.log(weather_attempts, weather_data);
 
     // Resets the attempt counter
     weather_attempts = 0;
-
-    // Creates DOM elements to put the current weather data into
-    const wx_iconEl = document.querySelector(".wx_icon");
-    const current_tempEl = document.querySelector(".current_temp");
-    const currents_wrapperEl = document.querySelector(".currents_wrapper");
 
     // Getes the url for the wx icon image based on the weather condition id
     const wx_icon = get_wx_icon(weather_data.weather[0].id);
@@ -155,11 +163,7 @@ function weather_received(weather_data) {
     wx_iconEl.innerHTML = "<img src=" + wx_icon + ">";
     current_tempEl.innerHTML = format_temp(weather_data.main.temp);
 
-    // Removes all child elements in the currents_wrapper div
-    while(currents_wrapperEl.firstChild) {
-        currents_wrapperEl.removeChild(currents_wrapperEl.firstChild);
-    }
-
+   
     // Creates the tagboxes to display the other current conditions along with their respecitve elements and inserts the data
     for(i = 0; i < 6; i++) {
 
@@ -198,7 +202,6 @@ function weather_received(weather_data) {
         currents_wrapperEl.appendChild(create_tagbox(tag_label, tag_value));
     }
 }
-
 // If the list of available countries is not in local storage, then it will make an api call to get them and then store them in local storage
 function get_countries() {
     // Checks to see if the list of countries is available in local storage. If it is, it puts it into the global variable.
@@ -228,16 +231,14 @@ function populate_country_list() {
 function set_world_time(timezone) {
 
     // Gets the current date/time in the selected country's timezone
-
     const country_dateEl = document.querySelector(".country_date");
     const country_timeEl = document.querySelector(".country_time");
     const country_timezoneEl = document.querySelector(".country_timezone");
 
     if(!timezone) {
         // If not timezone data is received it will clear out the current time and display that there's no data
-        alert_modal("Data Error", "No timezone information was received from the network, please try again later.");
         country_dateEl.innerHTML = "";
-        country_timeEl.innerHTML = "<p>Data Not Available</p>";
+        country_timeEl.innerHTML = "<p style='width: 100%; font-size:large; text-align:center'; >No Timezone Data Received</p>";
         country_timezoneEl.innerHTML = "";
         return false;
     }
@@ -284,6 +285,7 @@ function set_avg_temps(temp_data) {
 
     // This is the main container hard-coded in the HTML file
     const average_temps = document.querySelector(".average_temps_wrapper");
+    const legend = document.querySelector(".legend");
 
     // Clears out any children currently in the DOM
     while(average_temps.firstChild) {
@@ -292,8 +294,12 @@ function set_avg_temps(temp_data) {
 
     // Ensures that the data is valid from the received data, if not it does not display any information
     if(temp_data.weather[months[0]].tMax == 100 && temp_data.weather[months[0]].tMin == -100 ) {
+        average_temps.innerHTML = "<p>No Data Received</p>";
+        legend.style.display = "none";
         return false;        
     }
+
+    legend.style.display = "flex";
 
     // Creates the DOM elements for each month in the array and places them in the DOM
     for(let i=0; i < 12; i++) {
@@ -318,23 +324,22 @@ function set_avg_temps(temp_data) {
 function set_currency(currency_data) {
     const currencyEl = document.querySelector(".currency_wrapper");
 
-    if(!currency_data.code) {
-        // Error
-        currencyEl.innerHTML = "Data Not Available";
-        return false;
+    // Removes any previous currency data
+    while(currencyEl.firstChild) {
+        currencyEl.removeChild(currencyEl.firstChild);
     }
 
+    if(!currency_data.code) {
+        // Error
+        currencyEl.appendChild(create_tagbox("Currency Used", "No Currency Data Provided"));
+        return false;
+    }
 
     // Uses the built-in number formatter and sets it to the current country's code
     const currency = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: currency_data.code
     })
-
-    // Removes any previous currency data
-    while(currencyEl.firstChild) {
-        currencyEl.removeChild(currencyEl.firstChild);
-    }
 
     // Gets the DOM elements to be used as a tagbox to hold the label and data
     const currency_name = create_tagbox("Currency Used", currency_data.name + " (" + currency_data.code + ")");
@@ -354,12 +359,12 @@ function set_language(language_data) {
   }
 
   // Updates the DOM with any language information
-  if (language_data.length === 0) {
+  if (language_data.length === 0) {    
     // If there is no language data it will put a message in the DOM
-    const no_data_message = document.createElement("p");
-    no_data_message.textContent = "No Language Data Provided";
-    languageEl.appendChild(no_data_message);
-  } else {
+    languageEl.appendChild(create_tagbox("Spoken Language", "No Language Data Provided"));
+  
+} else {
+    
     // Get each language by iterating through the array of languages
     language_data.forEach(function (l) {
       const language = create_tagbox(
@@ -601,7 +606,6 @@ countryNameEl.addEventListener('change', function(event) {
         countryNameEl.focus();
     }
 });
-
 modalEl.addEventListener('click', function(event) {
     modalEl.style.display = "none";
 });
