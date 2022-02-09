@@ -66,11 +66,6 @@ main {
   font-family: "Roboto";
 }
 
-.country_time {
-  font-style: oblique;
-  font-size: 45px;
-}
-
 .country_date {
   font-family: "Roboto";
   font-weight: bold;
@@ -78,7 +73,7 @@ main {
 }
 
 .time_diff {
-  font-size: 22px;
+  font-size: large;
 }
 
 .currents {
@@ -90,7 +85,7 @@ main {
 .current_temp {
   font-family: "Roboto";
   font-style: oblique;
-  font-size: 35px;
+  font-size: xx-large;
   margin-left: 10px;
 }
 
@@ -105,11 +100,11 @@ main {
 .country_time {
   font-family: "Roboto";
   font-style: oblique;
-  font-size: 45px;
+  font-size: xx-large;
 }
 
 .country_timezone {
-  font-size: 12px;
+  font-size: x-small;
   font-style: italic;
   font-weight: bold;
   margin: 0;
@@ -128,18 +123,29 @@ main {
   margin-bottom: 10px;
 }
 
+.average_temps_wrapper p {
+  width: 100%;
+  text-align: center;
+}
+
 .currency_wrapper {
   /* display: flex; */
   flex-wrap: wrap;
   justify-content: flex-start;
-  border-bottom: black 2px solid;
-  margin-bottom: 25px;
+}
+
+.currency_wrapper p {
+  text-align: center;
 }
 
 .language_wrapper {
   /* display: flex; */
   flex-wrap: wrap;
   justify-content: flex-start;
+}
+
+.language_wrapper p {
+  text-align: center;
 }
 
 .tagbox {
@@ -171,6 +177,7 @@ main {
 .wx_icon {
   width: 128px;
   height: 128px;
+  
 }
 
 
@@ -189,7 +196,7 @@ main {
 
 /* Used to change the font size of am/pm */
 .subscript {
-  font-size: 26px;
+  font-size: large;
 }
 
 .is-hot {
@@ -205,7 +212,7 @@ main {
 }
 
 .legend {
-  display: flex;
+  display: none;
   justify-content: space-evenly;
 }
 
