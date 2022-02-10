@@ -35,7 +35,7 @@ For more indepth information on the functionality see the following:
 The map function of the app is supported by Google Maps.  Once a country is selected it is feed into the map function and the map displays the current Google Map information of the country. The feature is zoomable and scrollable  Also, the legend displays latitude and longitude, there is an option for satellite imagery and a link for finding directions is present.  
 
 ***-Current Time:***<br>
-The country specific time is found through Moment JS and through some JavaScript logic we present the current time with the difference of the country searched for the user.
+Once the country is selected the Travel Briefing API presents the App with the timezone which is then sent into Moment Timezone for finding the time realive to the country searched.  From there the app uses some JavaScript logical and Moment JS to find and compare the difference between the searched country and where the user is present and display it dynamically.  
 
 ***-Current Weather:***<br>
 The data is gathered from FCC-Weather API then dynamically presented through JavaScript to the HTML.  We also intergated annimated WX Icons to give the data some style and appear.
@@ -72,7 +72,7 @@ Each HTML element we used is given Bulma clases so it responses well to differen
     Code is Dry, has comments for descriptions, use of intendentations and is organized.
 
 - Must NOT use alerts, confirms or prompts:  
-    None present.   Modal alerts are used for network connection issues informing the user of any issues. 
+    None present. App uses Modal alerts to inform user network or connection issues
 
 - Must be deployed on GitHub Pages:  
     <a href="https://pjlawler.github.io/destination-briefing/">Destination Briefing Page</a>
@@ -102,8 +102,9 @@ CSS Framework:</br>
 Project Repo:</br>
 <a href="https://github.com/pjlawler/destination-briefing">Destination Briefing Repo</a>
 
-Time Keeping Program:  
-<a href="https://momentjs.com/">Moment JS</a>
+Time Keeping Programs:  
+<a href="https://momentjs.com/">Moment JS</a><br>  
+<a href="https://momentjs.com/timezone/">Moment Timezone</a>
 
 Annitmated WX Icons:</br>
 <a href="https://github.com/basmilius/weather-icons"> Icons Repo Link </a> -Copyright (c) 2020-2022 Bas Millius <a href="https://github.com/basmilius/weather-icons/blob/dev/LICENSE">See this Link for License Info</a>
@@ -111,4 +112,5 @@ Annitmated WX Icons:</br>
 Plug Type Icons:
 <a href="https://www.shutterstock.com/image-illustration/electric-outlet-illustration-on-white-background-524251816">Shutterstock.com</a>
 
-
+## Licensing:
+This project is licensed under the terms of the MIT license.  See LICENSE.md for more info.  
