@@ -567,9 +567,11 @@ function create_tagbox(label, value) {
 function alert_modal(title, message) {
     const modal_TitleEl = document.querySelector(".modal-title");
     const modal_MsgEl = document.querySelector(".modal-msg");
+    const modal_Button = document.querySelector(".modal-button");
     modal_TitleEl.innerHTML = "<p>" + title + "</p>";
     modal_MsgEl.innerHTML = "<p>" + message + "</p>";
     modalEl.style.display = "block";
+    modal_Button.focus();
 }
 function create_outlet_image_tagbox(urlArray) {
   
@@ -593,6 +595,8 @@ countryNameEl.addEventListener('change', function(event) {
 
     // Gets the url of the briefing for the selected country
     const brief_url = get_brief_url(event.target.value);
+    
+    event.target.blur();
 
     // Makes sure there is a url and sends the request to the network manager
     if(brief_url) {
@@ -602,8 +606,8 @@ countryNameEl.addEventListener('change', function(event) {
     } else {
 
         //Need to remove alert and add modal
-        alert("No matching country has been selected! Please select a copy on the list");
-        countryNameEl.focus();
+        alert_modal("User Input Error!", "No country name exists in the database that matches your selection. Please select a country from the drop-down list.");
+        countryNameEl.value = "";
     }
 });
 modalEl.addEventListener('click', function(event) {
